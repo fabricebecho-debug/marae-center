@@ -142,7 +142,7 @@ function SplashScreen({ onDone }) {
               textAnchor="middle"
               fontFamily="'Century Gothic', 'Trebuchet MS', sans-serif"
               fontWeight="900"
-              fontSize="32"
+              fontSize="26"
               letterSpacing="5"
               fill="#FFFFFF"
               style={{filter:"drop-shadow(0px 2px 6px rgba(0,0,0,0.4))"}}
@@ -300,7 +300,7 @@ function LoginScreen({ onLogin }) {
             display:"flex", alignItems:"center",
             background:C.light,
             border:`2px solid ${error?C.accent:C.light}`,
-            borderRadius:14, overflow:"hidden",
+            borderRadius:5, overflow:"hidden",
             transition:"border 0.2s",
           }}>
             <div style={{padding:"0 16px",fontSize:18,borderRight:`1px solid #D8E2F0`}}>👤</div>
@@ -329,7 +329,7 @@ function LoginScreen({ onLogin }) {
               display:"flex", alignItems:"center",
               background:"#FFF0F0",
               border:`2px solid ${C.accent}44`,
-              borderRadius:14, overflow:"hidden",
+              borderRadius:5, overflow:"hidden",
             }}>
               <div style={{padding:"0 16px",fontSize:18,borderRight:"1px solid #FFD0D0"}}>🔒</div>
               <input
@@ -355,10 +355,10 @@ function LoginScreen({ onLogin }) {
 
         {/* Bouton connexion */}
         <button onClick={login} style={{
-          width:"100%", padding:16, borderRadius:14, marginTop:4,
+          width:"100%", padding:16, borderRadius:5, marginTop:4,
           background:loading?C.sub:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,
           color:C.white, border:"none", fontSize:15, fontWeight:800,
-          cursor:"pointer",
+          cursor:"pointer", borderRadius:5,
           boxShadow:`0 6px 20px rgba(26,58,143,0.35)`,
           display:"flex", alignItems:"center", justifyContent:"center", gap:8,
           transition:"all 0.3s",
