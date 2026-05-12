@@ -420,6 +420,156 @@ function LoginScreen({ onLogin }) {
   );
 }
 
+/* ── Pagination ────────────────────────────────── */
+function Pagination({ total, current, perPage, onChange }) {
+  const totalPages = Math.ceil(total / perPage);
+  if (total === 0) return (
+    <div style={{textAlign:"center",padding:"24px 0",color:C.sub}}>
+      <div style={{fontSize:32,marginBottom:8}}>🔍</div>
+      <div style={{fontSize:13,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>Aucun produit trouvé</div>
+    </div>
+  );
+  if (totalPages <= 1) return (
+    <div style={{textAlign:"center",padding:"8px 0 4px",fontSize:10,color:C.sub,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+      {total} produit{total>1?"s":""}
+    </div>
+  );
+  return (
+    <div style={{padding:"16px 0 8px"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,flexWrap:"wrap",marginBottom:8}}>
+        <button onClick={()=>onChange(p=>Math.max(1,p-1))} disabled={current===1}
+          style={{width:34,height:34,borderRadius:8,border:`1.5px solid ${current===1?C.light:C.primary}`,background:current===1?"#F5F7FC":"transparent",color:current===1?C.sub:C.primary,fontSize:16,cursor:current===1?"default":"pointer",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          ‹
+        </button>
+        {Array.from({length:totalPages},(_,i)=>i+1).map(p=>(
+          <button key={p} onClick={()=>onChange(p)}
+            style={{width:34,height:34,borderRadius:8,border:`1.5px solid ${p===current?C.primary:C.light}`,background:p===current?C.primary:"transparent",color:p===current?C.white:C.sub,fontSize:12,cursor:"pointer",fontWeight:700,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+            {p}
+          </button>
+        ))}
+        <button onClick={()=>onChange(p=>Math.min(totalPages,p+1))} disabled={current===totalPages}
+          style={{width:34,height:34,borderRadius:8,border:`1.5px solid ${current===totalPages?C.light:C.primary}`,background:current===totalPages?"#F5F7FC":"transparent",color:current===totalPages?C.sub:C.primary,fontSize:16,cursor:current===totalPages?"default":"pointer",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          ›
+        </button>
+      </div>
+      <div style={{textAlign:"center",fontSize:10,color:C.sub,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+        Page {current} sur {totalPages} · {total} produit{total>1?"s":""}
+      </div>
+    </div>
+  );
+}
+
+/* ── Slider Bannières ──────────────────────────── */
+function BannerSlider({ onCreditClick }) {
+  const [current, setCurrent] = useState(0);
+
+  const slides = [
+    {
+      id: 0,
+      bg: `linear-gradient(135deg,${C.primaryDark},${C.primary})`,
+      tag: "PROMO DU JOUR",
+      tagColor: C.accent,
+      title: "Livraison\nGratuite 🚚",
+      sub: "Sur toute commande > 10 000 FCFA",
+      btnLabel: "Commander",
+      btnBg: C.accent,
+      btnColor: C.white,
+      onClick: null,
+      deco: C.accent,
+    },
+    {
+      id: 1,
+      bg: `linear-gradient(135deg,${C.accent},#A01515)`,
+      tag: "MUTUELLE DE CRÉDIT",
+      tagColor: C.white,
+      title: "Crédit en\n48h 🏦",
+      sub: "Taux avantageux • Montants jusqu'à 500 000 FCFA",
+      btnLabel: "Demander →",
+      btnBg: C.white,
+      btnColor: C.accent,
+      onClick: onCreditClick,
+      deco: "rgba(255,255,255,0.2)",
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(c => (c + 1) % slides.length);
+    }, 15000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const slide = slides[current];
+
+  return (
+    <div style={{margin:"16px 20px 0"}}>
+      <div style={{
+        background: slide.bg,
+        borderRadius: 20,
+        padding: 20,
+        color: C.white,
+        position: "relative",
+        overflow: "hidden",
+        transition: "background 0.6s ease",
+        cursor: slide.onClick ? "pointer" : "default",
+        minHeight: 140,
+      }} onClick={slide.onClick||undefined}>
+
+        {/* Cercles déco */}
+        <div style={{position:"absolute",right:-20,top:-20,width:130,height:130,borderRadius:"50%",border:`2px solid ${slide.deco}`,opacity:0.5}}/>
+        <div style={{position:"absolute",right:20,bottom:-30,width:80,height:80,borderRadius:"50%",background:slide.deco,opacity:0.15}}/>
+
+        {/* Tag */}
+        <div style={{
+          background: slide.tagColor=== C.white ? "rgba(255,255,255,0.25)" : slide.tagColor,
+          color: C.white,
+          fontSize:10, fontWeight:800,
+          padding:"4px 10px", borderRadius:20,
+          display:"inline-block", marginBottom:10, letterSpacing:1,
+          fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+        }}>{slide.tag}</div>
+
+        {/* Titre */}
+        <div style={{
+          fontSize:20, fontWeight:800, marginBottom:6, lineHeight:1.3,
+          fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+          transition:"opacity 0.4s ease",
+        }}>
+          {slide.title.split("\n").map((l,i)=><span key={i}>{l}{i<slide.title.split("\n").length-1&&<br/>}</span>)}
+        </div>
+
+        {/* Sous-titre */}
+        <div style={{fontSize:11,opacity:0.85,marginBottom:14,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+          {slide.sub}
+        </div>
+
+        {/* Bouton */}
+        <button style={{
+          background:slide.btnBg, color:slide.btnColor,
+          border:"none", borderRadius:10,
+          padding:"8px 18px", fontSize:12, fontWeight:700,
+          cursor:"pointer", fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+        }} onClick={e=>{e.stopPropagation();if(slide.onClick)slide.onClick();}}>
+          {slide.btnLabel}
+        </button>
+      </div>
+
+      {/* Indicateurs de slide */}
+      <div style={{display:"flex",justifyContent:"center",gap:6,marginTop:10}}>
+        {slides.map((_,i)=>(
+          <div key={i} onClick={()=>setCurrent(i)} style={{
+            width: i===current ? 20 : 6,
+            height:6, borderRadius:3,
+            background: i===current ? C.primary : C.light,
+            cursor:"pointer",
+            transition:"all 0.3s ease",
+          }}/>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── DONNÉES ─────────────────────────────────────── */
 const CATS=[{icon:"🏠",label:"Tout"},{icon:"🛒",label:"Épicerie"},{icon:"💊",label:"Santé"},{icon:"👗",label:"Mode"},{icon:"📱",label:"Tech"},{icon:"🍎",label:"Frais"}];
 const PRODS=[
@@ -429,6 +579,15 @@ const PRODS=[
   {id:4,icon:"📱",name:"Chargeur USB-C",cat:"Tech",price:"3 200",old:null,bg:"#EEF2FF"},
   {id:5,icon:"🍚",name:"Riz local 25kg",cat:"Épicerie",price:"18 500",old:"20 000",bg:"#FEE2E2"},
   {id:6,icon:"💊",name:"Multivitamines",cat:"Santé",price:"6 500",old:null,bg:"#EEF2FF"},
+  {id:7,icon:"🥫",name:"Tomates concentrées",cat:"Épicerie",price:"1 200",old:null,bg:"#FEE2E2"},
+  {id:8,icon:"🧃",name:"Jus de fruit 1L",cat:"Épicerie",price:"2 500",old:"3 000",bg:"#EEF2FF"},
+  {id:9,icon:"🍎",name:"Fruits frais (kg)",cat:"Frais",price:"1 800",old:null,bg:"#EEF2FF"},
+  {id:10,icon:"👟",name:"Chaussures sport",cat:"Mode",price:"25 000",old:"30 000",bg:"#EEF2FF"},
+  {id:11,icon:"💡",name:"Ampoule LED",cat:"Tech",price:"1 500",old:null,bg:"#FEE2E2"},
+  {id:12,icon:"🩺",name:"Masques chirurgicaux",cat:"Santé",price:"3 500",old:null,bg:"#EEF2FF"},
+  {id:13,icon:"🍳",name:"Huile végétale 1L",cat:"Épicerie",price:"1 800",old:"2 000",bg:"#EEF2FF"},
+  {id:14,icon:"👗",name:"Robe africaine",cat:"Mode",price:"15 000",old:null,bg:"#FEE2E2"},
+  {id:15,icon:"📲",name:"Câble HDMI",cat:"Tech",price:"4 500",old:null,bg:"#EEF2FF"},
 ];
 const LOANS=[
   {icon:"⚡",name:"Crédit Express",desc:"Jusqu'à 100 000 FCFA • 30 jours",rate:"2%/mois",color:"#EEF2FF"},
@@ -1097,6 +1256,9 @@ export default function App() {
   const [tab,setTab]=useState("home");
   const [adminTab,setAdminTab]=useState("dashboard");
   const [activeCat,setActiveCat]=useState(0);
+  const [searchQuery,setSearchQuery]=useState("");
+  const [currentPage,setCurrentPage]=useState(1);
+  const ITEMS_PER_PAGE = 10;
   const [cart,setCart]=useState([]);
   const [showCart,setShowCart]=useState(false);
   const [showLoan,setShowLoan]=useState(null);
@@ -1148,7 +1310,7 @@ export default function App() {
               </div>
               <div>
                 <div style={{fontSize:15,fontWeight:800,color:C.white,letterSpacing:1}}>MARAE CENTER</div>
-                <div style={{fontSize:9,color:"rgba(255,255,255,0.55)",letterSpacing:2}}>VOTRE APPLICATION MUTUALISTE</div>
+                <div style={{fontSize:7,color:"rgba(255,255,255,0.45)",letterSpacing:1.5}}>VOTRE APPLICATION MUTUALISTE</div>
               </div>
             </div>
             <div style={{display:"flex",gap:12}}>
@@ -1162,8 +1324,24 @@ export default function App() {
               </div>
             </div>
           </div>
-          <div style={{background:"rgba(255,255,255,0.14)",borderRadius:12,padding:"10px 16px",display:"flex",alignItems:"center",gap:8,color:"rgba(255,255,255,0.75)",fontSize:13,border:"1px solid rgba(255,255,255,0.18)"}}>
-            <span>🔍</span><span>Rechercher un produit ou service...</span>
+          <div style={{background:"rgba(255,255,255,0.14)",borderRadius:12,display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(255,255,255,0.18)",overflow:"hidden"}}>
+            <span style={{paddingLeft:14,fontSize:16}}>🔍</span>
+            <input
+              type="text"
+              placeholder="Rechercher un produit..."
+              value={searchQuery}
+              onChange={e=>{setSearchQuery(e.target.value);setCurrentPage(1);}}
+              style={{
+                flex:1, padding:"10px 14px 10px 4px",
+                background:"transparent", border:"none", outline:"none",
+                color:"white", fontSize:13,
+                fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+              }}
+            />
+            {searchQuery && (
+              <span onClick={()=>{setSearchQuery("");setCurrentPage(1);}}
+                style={{paddingRight:12,cursor:"pointer",color:"rgba(255,255,255,0.6)",fontSize:16}}>✕</span>
+            )}
           </div>
         </div>
 
@@ -1171,23 +1349,28 @@ export default function App() {
         <div style={{flex:1,overflowY:"auto",overflowX:"hidden",paddingBottom:80,WebkitOverflowScrolling:"touch"}}>
 
           {tab==="home"&&<>
-            {/* Bannière */}
-            <div style={{margin:"16px 20px",background:`linear-gradient(135deg,${C.primaryDark},${C.primary})`,borderRadius:20,padding:20,color:C.white,position:"relative",overflow:"hidden"}}>
-              <div style={{position:"absolute",right:-20,top:-20,width:120,height:120,borderRadius:"50%",border:`2px solid ${C.accent}55`}}/>
-              <div style={{background:C.accent,color:C.white,fontSize:10,fontWeight:800,padding:"4px 10px",borderRadius:20,display:"inline-block",marginBottom:8,letterSpacing:1}}>PROMO DU JOUR</div>
-              <div style={{fontSize:20,fontWeight:800,marginBottom:4,lineHeight:1.2}}>Livraison<br/>Gratuite 🚚</div>
-              <div style={{fontSize:12,opacity:0.8,marginBottom:14}}>Sur toute commande &gt; 10 000 FCFA</div>
-              <button style={{background:C.accent,color:C.white,border:"none",borderRadius:10,padding:"8px 18px",fontSize:12,fontWeight:700,cursor:"pointer"}}>Commander</button>
-            </div>
+            {/* ── Slider Bannières ── */}
+            <BannerSlider onCreditClick={()=>setTab("credit")}/>
 
             {/* Catégories */}
             <div style={{padding:"0 20px"}}>
               <div style={{fontSize:15,fontWeight:700,color:C.text,marginBottom:12}}>Catégories</div>
-              <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:4}}>
+              <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4}}>
                 {CATS.map((cat,i)=>(
-                  <div key={i} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,minWidth:62,cursor:"pointer"}} onClick={()=>setActiveCat(i)}>
-                    <div style={{width:52,height:52,borderRadius:16,background:i===activeCat?C.primary:C.light,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,border:`2px solid ${i===activeCat?C.accent:"transparent"}`}}>{cat.icon}</div>
-                    <span style={{fontSize:10,color:i===activeCat?C.primary:C.sub,fontWeight:600}}>{cat.label}</span>
+                  <div key={i} onClick={()=>{setActiveCat(i);setCurrentPage(1);}} style={{
+                    padding:"8px 16px",
+                    borderRadius:20,
+                    background:i===activeCat?C.primary:C.light,
+                    color:i===activeCat?C.white:C.sub,
+                    fontSize:12,
+                    fontWeight:700,
+                    cursor:"pointer",
+                    whiteSpace:"nowrap",
+                    border:`2px solid ${i===activeCat?C.primary:C.light}`,
+                    transition:"all 0.2s",
+                    fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+                  }}>
+                    {cat.label}
                   </div>
                 ))}
               </div>
@@ -1199,7 +1382,13 @@ export default function App() {
                 <span>Produits populaires</span><span style={{fontSize:12,color:C.primary,fontWeight:600}}>Voir tout →</span>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                {PRODS.map(p=>(
+                {PRODS.filter(p=>{
+                  const matchCat = activeCat===0 || p.cat===CATS[activeCat].label;
+                  const matchSearch = searchQuery==="" ||
+                    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    p.cat.toLowerCase().includes(searchQuery.toLowerCase());
+                  return matchCat && matchSearch;
+                }).slice((currentPage-1)*ITEMS_PER_PAGE, currentPage*ITEMS_PER_PAGE).map(p=>(
                   <div key={p.id} style={{background:C.card,borderRadius:16,overflow:"hidden",boxShadow:"0 2px 12px rgba(26,58,143,0.08)",cursor:"pointer"}}>
                     <div style={{height:108,display:"flex",alignItems:"center",justifyContent:"center",fontSize:42,background:p.bg}}>{p.icon}</div>
                     <div style={{padding:"10px 12px 12px"}}>
@@ -1216,19 +1405,20 @@ export default function App() {
                   </div>
                 ))}
               </div>
+              <Pagination
+                total={PRODS.filter(p=>{
+                  const matchCat=activeCat===0||p.cat===CATS[activeCat].label;
+                  const matchSearch=searchQuery===""||p.name.toLowerCase().includes(searchQuery.toLowerCase())||p.cat.toLowerCase().includes(searchQuery.toLowerCase());
+                  return matchCat&&matchSearch;
+                }).length}
+                current={currentPage}
+                perPage={ITEMS_PER_PAGE}
+                onChange={setCurrentPage}
+              />
             </div>
 
-            {/* Teaser mutuelle */}
-            <div style={{padding:"18px 20px 20px"}}>
-              <div style={{background:`linear-gradient(135deg,${C.accent},#A01515)`,borderRadius:16,padding:16,color:C.white,display:"flex",alignItems:"center",gap:14,cursor:"pointer"}} onClick={()=>setTab("credit")}>
-                <div style={{fontSize:36}}>🏦</div>
-                <div>
-                  <div style={{fontWeight:800,fontSize:14,marginBottom:4}}>Mutuelle de Crédit</div>
-                  <div style={{fontSize:11,opacity:0.9}}>Obtenez un crédit en 48h • Taux avantageux</div>
-                  <div style={{background:C.white,color:C.accent,fontSize:10,fontWeight:800,padding:"3px 10px",borderRadius:20,display:"inline-block",marginTop:6}}>Demander →</div>
-                </div>
-              </div>
-            </div>
+
+
           </>}
 
           {tab==="credit"&&<>
