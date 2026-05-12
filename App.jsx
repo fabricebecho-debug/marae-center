@@ -142,7 +142,7 @@ function SplashScreen({ onDone }) {
               textAnchor="middle"
               fontFamily="'Century Gothic', 'Trebuchet MS', sans-serif"
               fontWeight="900"
-              fontSize="26"
+              fontSize="20"
               letterSpacing="5"
               fill="#FFFFFF"
               style={{filter:"drop-shadow(0px 2px 6px rgba(0,0,0,0.4))"}}
