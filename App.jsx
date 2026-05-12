@@ -199,13 +199,10 @@ function SplashScreen({ onDone }) {
       <style>{`
         @keyframes spin{to{transform:rotate(360deg);}}
         html, body, #root {
-          height: 100% !important;
-          max-height: 100% !important;
-          overflow: hidden !important;
-          position: fixed !important;
-          width: 100% !important;
-          top: 0 !important;
-          left: 0 !important;
+          height: 100%;
+          width: 100%;
+          margin: 0;
+          padding: 0;
         }
       `}</style>
     </div>
@@ -625,7 +622,7 @@ function AdminApp({ onLogout, adminTab, setAdminTab }) {
       {success&&<div style={{background:"#D1FAE5",color:"#065F46",padding:"9px 20px",fontSize:12,fontWeight:700,textAlign:"center",flexShrink:0,borderBottom:"1px solid #A7F3D0"}}>{success}</div>}
 
       {/* ── Contenu ── */}
-      <div style={{flex:1,overflowY:"auto",paddingBottom:80}}>
+      <div style={{flex:1,overflowY:"auto",overflowX:"hidden",paddingBottom:80,WebkitOverflowScrolling:"touch"}}>
 
         {/* ══ DASHBOARD ══ */}
         {adminTab==="dashboard"&&<>
@@ -1171,7 +1168,7 @@ export default function App() {
         </div>
 
         {/* Contenu */}
-        <div style={{flex:1,overflowY:"auto",paddingBottom:80}}>
+        <div style={{flex:1,overflowY:"auto",overflowX:"hidden",paddingBottom:80,WebkitOverflowScrolling:"touch"}}>
 
           {tab==="home"&&<>
             {/* Bannière */}
