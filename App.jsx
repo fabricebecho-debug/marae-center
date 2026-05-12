@@ -152,7 +152,7 @@ function SplashScreen({ onDone }) {
           transition:"opacity 1.2s ease 0.6s",
           opacity:phase==="hold"?1:0,
         }}>
-          Votre application mutualiste
+          VOTRE APPLICATION MUTUALISTE
         </div>
       </div>
 
@@ -204,7 +204,6 @@ function Field({ label, icon, placeholder, value, onChange, type="text", onIconC
 
 /* ── LOGIN ───────────────────────────────────────── */
 function LoginScreen({ onLogin }) {
-  const [screen, setScreen] = useState("login");
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -215,76 +214,123 @@ function LoginScreen({ onLogin }) {
 
   const login = () => {
     if (!id.trim()) { setError("Veuillez entrer votre identifiant."); return; }
-    if (!pw.trim()) { setError("Veuillez entrer votre mot de passe."); return; }
+    // Si identifiant admin mais mdp vide ou incorrect
+    if (id.trim().toLowerCase() === "shevaron") {
+      if (!pw.trim()) { setError("Veuillez entrer le mot de passe admin."); return; }
+      if (pw.trim() !== "Hacksharing") { setError("Mot de passe admin incorrect."); return; }
+    }
     setError(""); setLoading(true);
-    setTimeout(() => { setLoading(false); onLogin(); }, 1600);
+    setTimeout(() => {
+      setLoading(false);
+      if (id.trim().toLowerCase() === "shevaron" && pw.trim() === "Hacksharing") {
+        onLogin("admin");
+      } else {
+        onLogin("user");
+      }
+    }, 1600);
   };
 
   return (
     <div style={{position:"absolute",inset:0,zIndex:50,display:"flex",flexDirection:"column",background:C.bg,fontFamily:"Georgia,serif",transition:"opacity 0.5s ease,transform 0.5s ease",opacity:entered?1:0,transform:entered?"translateY(0)":"translateY(30px)",overflowY:"auto"}}>
-      {/* Header */}
+
+      {/* Header bleu */}
       <div style={{background:`linear-gradient(140deg,${C.primaryDark},${C.primary})`,paddingTop:52,paddingBottom:68,paddingLeft:28,paddingRight:28,position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",border:"2px solid rgba(230,48,48,0.2)",top:-60,right:-40}}/>
+
+        {/* Logo + nom */}
         <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:28,position:"relative"}}>
           <div style={{width:54,height:54,borderRadius:14,background:C.white,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 16px rgba(0,0,0,0.3)"}}>
             <MaraeLogo size={46}/>
           </div>
           <div>
             <div style={{fontSize:17,fontWeight:800,color:C.white,letterSpacing:2}}>MARAE CENTER</div>
-            <div style={{fontSize:9,color:"rgba(255,255,255,0.5)",letterSpacing:3}}>BOUTIQUE & MUTUELLE</div>
+            <div style={{fontSize:9,color:"rgba(255,255,255,0.5)",letterSpacing:2}}>VOTRE APPLICATION MUTUALISTE</div>
           </div>
         </div>
-        <div style={{fontSize:24,fontWeight:800,color:C.white,marginBottom:6}}>
-          {screen==="login"?"Bon retour 👋":screen==="register"?"Créer un compte":"Récupérer l'accès"}
-        </div>
-        <div style={{fontSize:12,color:"rgba(255,255,255,0.6)"}}>
-          {screen==="login"?"Connectez-vous pour continuer":screen==="register"?"Rejoignez la communauté MARAE":"Entrez votre identifiant pour recevoir un code"}
-        </div>
+
+        <div style={{fontSize:24,fontWeight:800,color:C.white,marginBottom:6}}>Bon retour 👋</div>
+        <div style={{fontSize:12,color:"rgba(255,255,255,0.6)"}}>Entrez votre identifiant pour continuer</div>
       </div>
-      {/* Vague */}
+
+      {/* Vague décorative */}
       <div style={{marginTop:-2,lineHeight:0}}>
         <svg viewBox="0 0 390 40" style={{display:"block",width:"100%"}}>
           <path d="M0,20 C80,40 280,0 390,20 L390,0 L0,0 Z" fill={C.primary}/>
           <path d="M0,32 C100,12 290,48 390,28 L390,0 L0,0 Z" fill={C.primaryDark} opacity="0.4"/>
         </svg>
       </div>
+
       {/* Formulaire */}
-      <div style={{padding:"20px 24px 32px",flex:1}}>
-        {screen==="login" && <>
-          <Field label="Identifiant / Téléphone / Email" icon="👤" value={id} onChange={e=>{setId(e.target.value);setError("");}} placeholder="+225 07 00 00 000"/>
-          <Field label="Mot de passe" icon={showPw?"🔓":"🔒"} value={pw} onChange={e=>{setPw(e.target.value);setError("");}} placeholder="••••••••" type={showPw?"text":"password"} onIconClick={()=>setShowPw(v=>!v)}/>
-          {error && <div style={{background:"#FEE2E2",borderRadius:10,padding:"8px 12px",fontSize:12,color:C.accent,marginBottom:12}}>⚠️ {error}</div>}
-          <div style={{textAlign:"right",marginBottom:20}}>
-            <span style={{fontSize:12,color:C.primary,fontWeight:700,cursor:"pointer"}} onClick={()=>setScreen("forgot")}>Mot de passe oublié ?</span>
+      <div style={{padding:"32px 24px",flex:1,display:"flex",flexDirection:"column",justifyContent:"center"}}>
+
+        {/* Champ identifiant */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:8,letterSpacing:0.5}}>
+            IDENTIFIANT
           </div>
-          <button onClick={login} style={{width:"100%",padding:15,borderRadius:14,background:loading?C.sub:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",fontSize:15,fontWeight:800,cursor:"pointer",boxShadow:`0 6px 20px rgba(26,58,143,0.35)`,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-            {loading?(<><span style={{width:16,height:16,borderRadius:"50%",border:"2px solid rgba(255,255,255,0.3)",borderTop:"2px solid #fff",display:"inline-block",animation:"spin 0.8s linear infinite"}}/> Connexion…</>):"Se connecter →"}
-          </button>
-          <div style={{display:"flex",alignItems:"center",gap:10,margin:"20px 0"}}>
-            <div style={{flex:1,height:1,background:C.light}}/><span style={{fontSize:11,color:"#AAA"}}>ou</span><div style={{flex:1,height:1,background:C.light}}/>
+          <div style={{display:"flex",alignItems:"center",background:C.white,border:`2px solid ${error?C.accent:C.light}`,borderRadius:14,overflow:"hidden",boxShadow:"0 2px 10px rgba(0,0,0,0.06)",transition:"border 0.2s"}}>
+            <div style={{padding:"0 16px",fontSize:18,borderRight:`1px solid ${C.light}`}}>👤</div>
+            <input
+              type="text"
+              placeholder="Ex: MAR-XXXXXXX"
+              value={id}
+              onChange={e=>{ setId(e.target.value); setError(""); setPw(""); }}
+              style={{flex:1,padding:"15px 14px",border:"none",outline:"none",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:"transparent"}}
+            />
           </div>
-          <button style={{width:"100%",padding:13,borderRadius:14,background:C.white,border:`1.5px solid ${C.light}`,fontSize:13,fontWeight:700,color:C.text,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,boxShadow:"0 2px 8px rgba(0,0,0,0.06)"}}>📱 Continuer avec OTP SMS</button>
-          <div style={{textAlign:"center",marginTop:24,fontSize:13,color:C.sub}}>
-            Pas encore de compte ?{" "}<span style={{color:C.accent,fontWeight:800,cursor:"pointer"}} onClick={()=>setScreen("register")}>S'inscrire</span>
+        </div>
+
+        {/* Champ mot de passe admin — apparaît uniquement pour shevaron */}
+        {id.trim().toLowerCase() === "shevaron" && (
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:8,letterSpacing:0.5}}>
+              MOT DE PASSE ADMIN
+            </div>
+            <div style={{display:"flex",alignItems:"center",background:C.white,border:`2px solid ${C.accent}44`,borderRadius:14,overflow:"hidden",boxShadow:"0 2px 10px rgba(230,48,48,0.1)"}}>
+              <div style={{padding:"0 16px",fontSize:18,borderRight:`1px solid ${C.light}`}}>🔒</div>
+              <input
+                type={showPw?"text":"password"}
+                placeholder="Mot de passe admin"
+                value={pw}
+                onChange={e=>{ setPw(e.target.value); setError(""); }}
+                style={{flex:1,padding:"15px 14px",border:"none",outline:"none",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:"transparent"}}
+              />
+              <div style={{padding:"0 14px",fontSize:18,cursor:"pointer",color:C.sub}} onClick={()=>setShowPw(v=>!v)}>
+                {showPw?"🔓":"👁️"}
+              </div>
+            </div>
           </div>
-        </>}
-        {screen==="register" && <>
-          <Field label="Nom complet" icon="👤" placeholder="Ex: Kouassi Diomandé"/>
-          <Field label="Téléphone" icon="📱" placeholder="+225 07 00 00 000"/>
-          <Field label="Email (optionnel)" icon="📧" placeholder="exemple@mail.com"/>
-          <Field label="Mot de passe" icon="🔒" placeholder="••••••••" type="password"/>
-          <button style={{width:"100%",padding:15,borderRadius:14,background:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",fontSize:15,fontWeight:800,cursor:"pointer"}} onClick={onLogin}>Créer mon compte →</button>
-          <div style={{textAlign:"center",marginTop:20,fontSize:13,color:C.sub}}>Déjà un compte ?{" "}<span style={{color:C.accent,fontWeight:800,cursor:"pointer"}} onClick={()=>setScreen("login")}>Se connecter</span></div>
-        </>}
-        {screen==="forgot" && <>
-          <div style={{background:C.light,borderRadius:14,padding:14,marginBottom:16,fontSize:12,color:C.primary}}>💡 Entrez votre numéro ou email pour recevoir un code.</div>
-          <Field label="Téléphone ou Email" icon="📱" placeholder="+225 07 00 00 000"/>
-          <button style={{width:"100%",padding:15,borderRadius:14,background:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",fontSize:15,fontWeight:800,cursor:"pointer"}}>Envoyer le code →</button>
-          <div style={{textAlign:"center",marginTop:20,fontSize:13,color:C.sub}}><span style={{color:C.primary,fontWeight:800,cursor:"pointer"}} onClick={()=>setScreen("login")}>← Retour à la connexion</span></div>
-        </>}
+        )}
+
+        {/* Message erreur */}
+        {error && (
+          <div style={{background:"#FEE2E2",borderRadius:10,padding:"10px 14px",fontSize:12,color:C.accent,marginBottom:12,display:"flex",alignItems:"center",gap:8}}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* Bouton connexion */}
+        <button onClick={login} style={{
+          width:"100%", padding:16, borderRadius:14, marginTop:8,
+          background:loading?C.sub:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,
+          color:C.white, border:"none", fontSize:15, fontWeight:800,
+          cursor:"pointer", boxShadow:`0 6px 20px rgba(26,58,143,0.35)`,
+          display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+          transition:"all 0.3s",
+        }}>
+          {loading ? (
+            <><span style={{width:16,height:16,borderRadius:"50%",border:"2px solid rgba(255,255,255,0.3)",borderTop:"2px solid #fff",display:"inline-block",animation:"spin 0.8s linear infinite"}}/> Connexion en cours…</>
+          ) : "Se connecter →"}
+        </button>
+
       </div>
-      <div style={{textAlign:"center",padding:"0 24px 28px",fontSize:10,color:"#AAA",lineHeight:1.6}}>
-        En vous connectant, vous acceptez nos <span style={{color:C.primary,fontWeight:700}}>Conditions d'utilisation</span> et notre <span style={{color:C.primary,fontWeight:700}}>Politique de confidentialité</span>
+
+      {/* Footer */}
+      <div style={{textAlign:"center",padding:"0 24px 32px",fontSize:10,color:"#BBB",lineHeight:1.8}}>
+        En vous connectant, vous acceptez nos{" "}
+        <span style={{color:C.primary,fontWeight:700}}>Conditions d'utilisation</span>
+        {" "}et notre{" "}
+        <span style={{color:C.primary,fontWeight:700}}>Politique de confidentialité</span>
       </div>
     </div>
   );
@@ -305,6 +351,605 @@ const LOANS=[
   {icon:"🏗️",name:"Crédit Projet",desc:"Jusqu'à 500 000 FCFA • 12 mois",rate:"1.5%/mois",color:"#FEE2E2"},
   {icon:"👨‍👩‍👧",name:"Crédit Solidaire",desc:"Groupe • 250 000 FCFA max",rate:"1%/mois",color:"#EEF2FF"},
 ];
+
+
+/* ══════════════════════════════════════════════════
+   ESPACE ADMINISTRATEUR — COMPLET
+══════════════════════════════════════════════════ */
+
+const INIT_PRODUCTS = [
+  {id:1,icon:"🛢️",name:"Huile palme 5L",cat:"Épicerie",price:4500,stock:48,enStock:true},
+  {id:2,icon:"🧴",name:"Savon liquide",cat:"Santé",price:2800,stock:120,enStock:true},
+  {id:3,icon:"👘",name:"Tissu Wax 6m",cat:"Mode",price:12000,stock:15,enStock:true},
+  {id:4,icon:"📱",name:"Chargeur USB-C",cat:"Tech",price:3200,stock:60,enStock:true},
+  {id:5,icon:"🍚",name:"Riz local 25kg",cat:"Épicerie",price:18500,stock:30,enStock:true},
+  {id:6,icon:"💊",name:"Multivitamines",cat:"Santé",price:6500,stock:80,enStock:true},
+];
+
+const INIT_CLIENTS = [
+  {id:"MAR-0001",name:"Kouassi Diomandé",phone:"+225 07 12 34 56",credit:75000,epargne:42500,status:"Actif"},
+  {id:"MAR-0002",name:"Aminata Koné",phone:"+225 05 98 76 54",credit:50000,epargne:30000,status:"Actif"},
+  {id:"MAR-0003",name:"Bamba Traoré",phone:"+225 01 23 45 67",credit:0,epargne:15000,status:"Actif"},
+  {id:"MAR-0004",name:"Fatou Coulibaly",phone:"+225 07 65 43 21",credit:100000,epargne:60000,status:"Suspendu"},
+];
+
+const INIT_OPS = [
+  {id:1,type:"Commande",client:"MAR-0001",desc:"Huile palme 5L x2",montant:9000,date:"12/05/2026 08:32",status:"Livré"},
+  {id:2,type:"Crédit",client:"MAR-0002",desc:"Crédit Express accordé",montant:50000,date:"12/05/2026 09:10",status:"En cours"},
+  {id:3,type:"Commande",client:"MAR-0003",desc:"Riz local 25kg",montant:18500,date:"12/05/2026 10:05",status:"En cours"},
+  {id:4,type:"Remboursement",client:"MAR-0001",desc:"Versement mensuel",montant:5000,date:"11/05/2026 14:22",status:"Confirmé"},
+];
+
+const INIT_COMMANDES = [
+  {id:"CMD-001",client:"MAR-0001",clientName:"Kouassi Diomandé",produits:[{name:"Huile palme 5L",qty:2,prix:4500}],total:9000,date:"12/05/2026 08:32",status:"En attente"},
+  {id:"CMD-002",client:"MAR-0003",clientName:"Bamba Traoré",produits:[{name:"Riz local 25kg",qty:1,prix:18500}],total:18500,date:"12/05/2026 10:05",status:"En attente"},
+  {id:"CMD-003",client:"MAR-0002",clientName:"Aminata Koné",produits:[{name:"Savon liquide",qty:3,prix:2800},{name:"Multivitamines",qty:1,prix:6500}],total:14900,date:"12/05/2026 11:30",status:"En attente"},
+  {id:"CMD-004",client:"MAR-0001",clientName:"Kouassi Diomandé",produits:[{name:"Tissu Wax 6m",qty:1,prix:12000}],total:12000,date:"11/05/2026 16:45",status:"Validée"},
+  {id:"CMD-005",client:"MAR-0004",clientName:"Fatou Coulibaly",produits:[{name:"Chargeur USB-C",qty:2,prix:3200}],total:6400,date:"11/05/2026 14:20",status:"Rejetée"},
+];
+
+const INIT_CREDITS = [
+  {id:"CRD-001",client:"MAR-0001",clientName:"Kouassi Diomandé",type:"Express",montant:75000,date:"05/05/2026",status:"En cours"},
+  {id:"CRD-002",client:"MAR-0002",clientName:"Aminata Koné",type:"Projet",montant:50000,date:"03/05/2026",status:"En cours"},
+  {id:"CRD-003",client:"MAR-0004",clientName:"Fatou Coulibaly",type:"Solidaire",montant:100000,date:"01/05/2026",status:"En attente"},
+];
+
+/* ── Champ input réutilisable ── */
+function AdminInput({label,value,onChange,placeholder,type="text"}) {
+  return (
+    <div style={{marginBottom:12}}>
+      <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4,letterSpacing:0.5}}>{label}</div>
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+        style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Georgia,serif",outline:"none",background:C.light,boxSizing:"border-box",color:C.text}}/>
+    </div>
+  );
+}
+
+function AdminApp({ onLogout, adminTab, setAdminTab }) {
+  const A = C;
+  const [products,setProducts] = useState(INIT_PRODUCTS);
+  const [clients,setClients] = useState(INIT_CLIENTS);
+  const [operations,setOperations] = useState(INIT_OPS);
+  const [commandes,setCommandes] = useState(INIT_COMMANDES);
+  const [credits,setCredits] = useState(INIT_CREDITS);
+
+  /* ─ Modals ─ */
+  const [modal,setModal] = useState(null); // "addProd"|"editProd"|"addClient"|"editClient"|"addCredit"|"confirmDel"
+  const [delTarget,setDelTarget] = useState(null);
+  const [success,setSuccess] = useState("");
+
+  /* ─ Formulaires ─ */
+  const [newProd,setNewProd] = useState({name:"",cat:"Épicerie",price:"",stock:"",icon:"📦",enStock:true});
+  const [editProd,setEditProd] = useState(null);
+  const [newClient,setNewClient] = useState({name:"",phone:""});
+  const [editClient,setEditClient] = useState(null);
+  const [newCredit,setNewCredit] = useState({clientId:"",montant:"",type:"Express"});
+  const [cmdFilter,setCmdFilter] = useState("Toutes");
+  const [creditFilter,setCreditFilter] = useState("Toutes");
+
+  /* ─ Stats ─ */
+  const cmdEnAttente = commandes.filter(c=>c.status==="En attente").length;
+  const creditEnAttente = credits.filter(c=>c.status==="En attente").length;
+  const totalCA = commandes.filter(c=>c.status==="Validée").reduce((s,c)=>s+c.total,0);
+  const clientsActifs = clients.filter(c=>c.status==="Actif").length;
+
+  const ok = (msg) => { setSuccess(msg); setTimeout(()=>setSuccess(""),3000); };
+  const closeModal = () => { setModal(null); setEditProd(null); setEditClient(null); setDelTarget(null); };
+
+  /* ─ PRODUITS ─ */
+  const addProduct = () => {
+    if (!newProd.name||!newProd.price) return;
+    const p = {...newProd,id:Date.now(),price:parseInt(newProd.price),stock:parseInt(newProd.stock)||0};
+    setProducts(ps=>[...ps,p]);
+    setOperations(o=>[{id:Date.now(),type:"Produit",client:"ADMIN",desc:`Produit ajouté: ${p.name}`,montant:0,date:new Date().toLocaleString("fr-FR"),status:"Ajouté"},...o]);
+    setNewProd({name:"",cat:"Épicerie",price:"",stock:"",icon:"📦",enStock:true});
+    closeModal(); ok("✅ Produit ajouté !");
+  };
+  const saveEditProd = () => {
+    setProducts(ps=>ps.map(p=>p.id===editProd.id?{...editProd,price:parseInt(editProd.price),stock:parseInt(editProd.stock)||0}:p));
+    closeModal(); ok("✅ Produit modifié !");
+  };
+  const deleteProd = (id) => {
+    setProducts(ps=>ps.filter(p=>p.id!==id));
+    closeModal(); ok("🗑️ Produit supprimé.");
+  };
+  const toggleStock = (id) => {
+    setProducts(ps=>ps.map(p=>p.id===id?{...p,enStock:!p.enStock}:p));
+    const p = products.find(x=>x.id===id);
+    ok(`${p.enStock?"⚠️ Rupture de stock":"✅ En stock"} : ${p.name}`);
+  };
+
+  /* ─ CLIENTS ─ */
+  const addClient = () => {
+    if (!newClient.name||!newClient.phone) return;
+    const id = `MAR-${String(clients.length+1).padStart(4,"0")}`;
+    const cl = {id,name:newClient.name,phone:newClient.phone,credit:0,epargne:0,status:"Actif"};
+    setClients(cs=>[...cs,cl]);
+    setOperations(o=>[{id:Date.now(),type:"Client",client:id,desc:`Nouveau client: ${cl.name}`,montant:0,date:new Date().toLocaleString("fr-FR"),status:"Enregistré"},...o]);
+    setNewClient({name:"",phone:""}); closeModal(); ok(`✅ Client ajouté — ID: ${id}`);
+  };
+  const saveEditClient = () => {
+    setClients(cs=>cs.map(c=>c.id===editClient.id?editClient:c));
+    closeModal(); ok("✅ Client modifié !");
+  };
+  const deleteClient = (id) => {
+    setClients(cs=>cs.filter(c=>c.id!==id));
+    closeModal(); ok("🗑️ Client supprimé.");
+  };
+  const toggleClientStatus = (id) => {
+    setClients(cs=>cs.map(c=>c.id===id?{...c,status:c.status==="Actif"?"Suspendu":"Actif"}:c));
+    const cl = clients.find(c=>c.id===id);
+    ok(`${cl.status==="Actif"?"⛔ Client désactivé":"✅ Client réactivé"} : ${cl.name}`);
+  };
+
+  /* ─ COMMANDES ─ */
+  const validerCmd = (id) => {
+    setCommandes(cs=>cs.map(c=>c.id===id?{...c,status:"Validée"}:c));
+    const cmd = commandes.find(c=>c.id===id);
+    setOperations(o=>[{id:Date.now(),type:"Commande",client:cmd.client,desc:`Commande ${id} validée`,montant:cmd.total,date:new Date().toLocaleString("fr-FR"),status:"Livré"},...o]);
+    ok("✅ Commande validée !");
+  };
+  const rejeterCmd = (id) => {
+    setCommandes(cs=>cs.map(c=>c.id===id?{...c,status:"Rejetée"}:c));
+    const cmd = commandes.find(c=>c.id===id);
+    setOperations(o=>[{id:Date.now(),type:"Commande",client:cmd.client,desc:`Commande ${id} rejetée`,montant:cmd.total,date:new Date().toLocaleString("fr-FR"),status:"Annulé"},...o]);
+    ok("❌ Commande rejetée.");
+  };
+
+  /* ─ CRÉDITS ─ */
+  const addCredit = () => {
+    if (!newCredit.clientId||!newCredit.montant) return;
+    const montant = parseInt(newCredit.montant);
+    const cl = clients.find(c=>c.id===newCredit.clientId);
+    const crd = {id:`CRD-${String(credits.length+1).padStart(3,"0")}`,client:newCredit.clientId,clientName:cl?.name||"",type:newCredit.type,montant,date:new Date().toLocaleDateString("fr-FR"),status:"En cours"};
+    setCredits(cs=>[crd,...cs]);
+    setClients(cs=>cs.map(c=>c.id===newCredit.clientId?{...c,credit:c.credit+montant}:c));
+    setOperations(o=>[{id:Date.now(),type:"Crédit",client:newCredit.clientId,desc:`Crédit ${newCredit.type} — ${cl?.name}`,montant,date:new Date().toLocaleString("fr-FR"),status:"En cours"},...o]);
+    setNewCredit({clientId:"",montant:"",type:"Express"}); closeModal(); ok("✅ Crédit accordé !");
+  };
+
+  const filteredCmds = cmdFilter==="Toutes"?commandes:commandes.filter(c=>c.status===cmdFilter);
+  const filteredCredits = creditFilter==="Toutes"?credits:credits.filter(c=>c.status===creditFilter);
+
+  const inputStyle = {width:"100%",border:`1.5px solid ${A.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Georgia,serif",outline:"none",background:A.light,boxSizing:"border-box",color:A.text};
+
+  return (
+    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",background:"#F0F3FA",fontFamily:"Georgia,serif",position:"relative",overflow:"hidden"}}>
+
+      {/* ── Header ── */}
+      <div style={{background:`linear-gradient(135deg,${A.primaryDark},${A.primary})`,padding:"14px 20px",color:A.white,flexShrink:0}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:36,height:36,borderRadius:10,background:A.white,display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <MaraeLogo size={30}/>
+            </div>
+            <div>
+              <div style={{fontSize:13,fontWeight:800,letterSpacing:1}}>ADMIN MARAE CENTER</div>
+              <div style={{fontSize:9,opacity:0.6,letterSpacing:2}}>TABLEAU DE BORD</div>
+            </div>
+          </div>
+          <button onClick={onLogout} style={{background:"rgba(230,48,48,0.25)",border:"1px solid rgba(230,48,48,0.5)",color:A.white,borderRadius:8,padding:"7px 12px",fontSize:11,fontWeight:700,cursor:"pointer"}}>
+            🚪 Déconnexion
+          </button>
+        </div>
+      </div>
+
+      {/* ── Toast succès ── */}
+      {success&&<div style={{background:"#D1FAE5",color:"#065F46",padding:"9px 20px",fontSize:12,fontWeight:700,textAlign:"center",flexShrink:0,borderBottom:"1px solid #A7F3D0"}}>{success}</div>}
+
+      {/* ── Contenu ── */}
+      <div style={{flex:1,overflowY:"auto",paddingBottom:80}}>
+
+        {/* ══ DASHBOARD ══ */}
+        {adminTab==="dashboard"&&<>
+          <div style={{padding:"14px 14px 0",display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              {icon:"💰",label:"CA validé",value:`${totalCA.toLocaleString("fr-FR")} F`,bg:"#0EA5E9",tc:"#fff",border:"#3558A8"},
+              {icon:"👥",label:"Clients actifs",value:clientsActifs,bg:"#0EA5E9",tc:"#fff",border:"#3558A8"},
+              {icon:"🛒",label:"Cmdes en attente",value:cmdEnAttente,bg:"#0EA5E9",tc:"#fff",border:"#3558A8",alert:cmdEnAttente>0,tab:"commandes"},
+              {icon:"💳",label:"Crédits en attente",value:creditEnAttente,bg:"#0EA5E9",tc:"#fff",border:"#3558A8",alert:creditEnAttente>0,tab:"credits"},
+            ].map((s,i)=>(
+              <div key={i} onClick={s.tab?()=>setAdminTab(s.tab):undefined}
+                style={{background:s.bg,borderRadius:14,padding:"14px",boxShadow:`0 4px 12px rgba(14,165,233,0.25)`,cursor:s.tab?"pointer":"default",border:`2px solid ${s.border}`}}>
+                <div style={{fontSize:22,marginBottom:6}}>{s.icon}</div>
+                <div style={{fontSize:10,color:s.tc,opacity:0.8,marginBottom:4,fontWeight:600}}>{s.label}</div>
+                <div style={{display:"flex",alignItems:"center",gap:6}}>
+                  <div style={{fontSize:18,fontWeight:800,color:s.tc}}>{s.value}</div>
+                  {s.alert&&<span style={{fontSize:8,background:"#F59E0B",color:"#fff",padding:"2px 6px",borderRadius:10,fontWeight:800}}>URGENT</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Actions rapides */}
+          <div style={{padding:"14px 14px 0"}}>
+            <div style={{fontSize:13,fontWeight:700,color:A.text,marginBottom:10}}>Actions rapides</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+              {[
+                {icon:"📦",label:"Produit",color:A.primary,action:()=>setModal("addProd")},
+                {icon:"👤",label:"Client",color:"#059669",action:()=>setModal("addClient")},
+                {icon:"💳",label:"Crédit",color:A.accent,action:()=>setModal("addCredit")},
+              ].map((b,i)=>(
+                <button key={i} onClick={b.action} style={{background:b.color,color:"#fff",border:"none",borderRadius:12,padding:"12px 8px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+                  <span style={{fontSize:20}}>{b.icon}</span>
+                  <span style={{fontSize:10,fontWeight:700}}>{b.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Dernières ops */}
+          <div style={{padding:"14px 14px 0"}}>
+            <div style={{fontSize:13,fontWeight:700,color:A.text,marginBottom:10}}>Opérations récentes</div>
+            {operations.slice(0,4).map((op,i)=>(
+              <div key={i} style={{background:A.white,borderRadius:12,padding:"11px 14px",marginBottom:8,display:"flex",alignItems:"center",gap:10,boxShadow:"0 1px 6px rgba(26,58,143,0.05)"}}>
+                <span style={{fontSize:20}}>{op.type==="Commande"?"🛒":op.type==="Crédit"?"💳":op.type==="Remboursement"?"💰":op.type==="Client"?"👤":"📦"}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:700,color:A.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{op.desc}</div>
+                  <div style={{fontSize:10,color:A.sub}}>{op.client} · {op.date}</div>
+                </div>
+                {op.montant>0&&<div style={{fontSize:12,fontWeight:800,color:A.primary,flexShrink:0}}>{op.montant.toLocaleString("fr-FR")} F</div>}
+              </div>
+            ))}
+          </div>
+        </>}
+
+        {/* ══ PRODUITS ══ */}
+        {adminTab==="products"&&(
+          <div style={{padding:"14px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+              <div>
+                <div style={{fontSize:15,fontWeight:800,color:A.text}}>Produits ({products.length})</div>
+                <div style={{fontSize:10,color:A.sub}}>{products.filter(p=>p.enStock).length} en stock · {products.filter(p=>!p.enStock).length} en rupture</div>
+              </div>
+              <button onClick={()=>setModal("addProd")} style={{background:A.primary,color:"#fff",border:"none",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer"}}>+ Ajouter</button>
+            </div>
+            {products.map((p,i)=>(
+              <div key={i} style={{background:A.white,borderRadius:14,padding:"12px 14px",marginBottom:10,boxShadow:"0 1px 8px rgba(26,58,143,0.07)"}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                  <div style={{width:44,height:44,borderRadius:10,background:"#EEF2FF",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{p.icon}</div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:700,color:A.text}}>{p.name}</div>
+                    <div style={{fontSize:11,color:A.sub}}>{p.cat} · Stock: {p.stock}</div>
+                  </div>
+                  <div style={{fontSize:14,fontWeight:800,color:A.primary,flexShrink:0}}>{p.price.toLocaleString("fr-FR")} F</div>
+                </div>
+                {/* Actions */}
+                <div style={{display:"flex",gap:6}}>
+                  <button onClick={()=>toggleStock(p.id)} style={{flex:1,padding:"7px 4px",borderRadius:8,border:"none",background:p.enStock?"#ECFDF5":"#FEE2E2",color:p.enStock?"#059669":A.accent,fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                    {p.enStock?"✅ En stock":"⚠️ Rupture"}
+                  </button>
+                  <button onClick={()=>{setEditProd({...p,price:String(p.price),stock:String(p.stock)});setModal("editProd");}} style={{flex:1,padding:"7px 4px",borderRadius:8,border:"none",background:"#EEF2FF",color:A.primary,fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                    ✏️ Modifier
+                  </button>
+                  <button onClick={()=>{setDelTarget({type:"prod",id:p.id,name:p.name});setModal("confirmDel");}} style={{padding:"7px 10px",borderRadius:8,border:"none",background:"#FEE2E2",color:A.accent,fontSize:12,cursor:"pointer",fontWeight:700}}>
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ══ CLIENTS ══ */}
+        {adminTab==="clients"&&(
+          <div style={{padding:"14px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+              <div>
+                <div style={{fontSize:15,fontWeight:800,color:A.text}}>Clients ({clients.length})</div>
+                <div style={{fontSize:10,color:A.sub}}>{clientsActifs} actifs · {clients.filter(c=>c.status==="Suspendu").length} suspendus</div>
+              </div>
+              <button onClick={()=>setModal("addClient")} style={{background:"#059669",color:"#fff",border:"none",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer"}}>+ Ajouter</button>
+            </div>
+            {clients.map((cl,i)=>(
+              <div key={i} style={{background:A.white,borderRadius:14,padding:"14px",marginBottom:10,boxShadow:"0 1px 8px rgba(26,58,143,0.07)",opacity:cl.status==="Suspendu"?0.75:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+                  <div style={{width:40,height:40,borderRadius:12,background:`linear-gradient(135deg,${A.primary},${A.accent})`,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:14,fontWeight:800,flexShrink:0}}>
+                    {cl.name.split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase()}
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:700,color:A.text}}>{cl.name}</div>
+                    <div style={{fontSize:10,color:A.sub}}>{cl.id} · {cl.phone}</div>
+                  </div>
+                  <span style={{fontSize:9,fontWeight:700,padding:"3px 8px",borderRadius:20,background:cl.status==="Actif"?"#D1FAE5":"#FEE2E2",color:cl.status==="Actif"?"#065F46":A.accent,flexShrink:0}}>
+                    {cl.status}
+                  </span>
+                </div>
+                <div style={{display:"flex",gap:6,marginBottom:8}}>
+                  <div style={{flex:1,background:"#EEF2FF",borderRadius:8,padding:"6px",textAlign:"center"}}>
+                    <div style={{fontSize:9,color:A.sub}}>Épargne</div>
+                    <div style={{fontSize:11,fontWeight:800,color:A.primary}}>{cl.epargne.toLocaleString("fr-FR")} F</div>
+                  </div>
+                  <div style={{flex:1,background:"#FEE2E2",borderRadius:8,padding:"6px",textAlign:"center"}}>
+                    <div style={{fontSize:9,color:A.sub}}>Crédit</div>
+                    <div style={{fontSize:11,fontWeight:800,color:A.accent}}>{cl.credit.toLocaleString("fr-FR")} F</div>
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:6}}>
+                  <button onClick={()=>toggleClientStatus(cl.id)} style={{flex:1,padding:"7px",borderRadius:8,border:"none",background:cl.status==="Actif"?"#FFF3CD":"#D1FAE5",color:cl.status==="Actif"?"#92400E":"#059669",fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                    {cl.status==="Actif"?"⛔ Désactiver":"✅ Réactiver"}
+                  </button>
+                  <button onClick={()=>{setEditClient({...cl});setModal("editClient");}} style={{flex:1,padding:"7px",borderRadius:8,border:"none",background:"#EEF2FF",color:A.primary,fontSize:10,fontWeight:700,cursor:"pointer"}}>
+                    ✏️ Modifier
+                  </button>
+                  <button onClick={()=>{setDelTarget({type:"client",id:cl.id,name:cl.name});setModal("confirmDel");}} style={{padding:"7px 10px",borderRadius:8,border:"none",background:"#FEE2E2",color:A.accent,fontSize:12,cursor:"pointer",fontWeight:700}}>
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ══ COMMANDES ══ */}
+        {adminTab==="commandes"&&(
+          <div style={{padding:"14px"}}>
+            <div style={{fontSize:15,fontWeight:800,color:A.text,marginBottom:4}}>Commandes clients</div>
+            <div style={{fontSize:10,color:A.sub,marginBottom:10}}>{cmdEnAttente} en attente · {commandes.filter(c=>c.status==="Validée").length} validées · {commandes.filter(c=>c.status==="Rejetée").length} rejetées</div>
+            {/* Filtres */}
+            <div style={{display:"flex",gap:6,marginBottom:12,overflowX:"auto",paddingBottom:4}}>
+              {["Toutes","En attente","Validée","Rejetée"].map(f=>(
+                <button key={f} onClick={()=>setCmdFilter(f)} style={{padding:"5px 12px",borderRadius:20,fontSize:10,fontWeight:700,border:"none",cursor:"pointer",whiteSpace:"nowrap",
+                  background:cmdFilter===f?A.primary:"#EEF2FF",color:cmdFilter===f?"#fff":A.primary}}>
+                  {f}{f==="En attente"&&cmdEnAttente>0?` (${cmdEnAttente})`:""}
+                </button>
+              ))}
+            </div>
+            {filteredCmds.map((cmd,i)=>(
+              <div key={i} style={{background:A.white,borderRadius:14,padding:"14px",marginBottom:10,boxShadow:"0 1px 8px rgba(26,58,143,0.07)",border:cmd.status==="En attente"?"2px solid #F59E0B":"2px solid transparent"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:800,color:A.text}}>{cmd.id}</div>
+                    <div style={{fontSize:10,color:A.sub}}>{cmd.clientName} · {cmd.client}</div>
+                  </div>
+                  <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20,
+                    background:cmd.status==="En attente"?"#FFF3CD":cmd.status==="Validée"?"#D1FAE5":"#FEE2E2",
+                    color:cmd.status==="En attente"?"#92400E":cmd.status==="Validée"?"#065F46":A.accent}}>
+                    {cmd.status}
+                  </span>
+                </div>
+                <div style={{background:"#F8F9FF",borderRadius:8,padding:"8px 10px",marginBottom:8}}>
+                  {cmd.produits.map((p,j)=>(
+                    <div key={j} style={{display:"flex",justifyContent:"space-between",fontSize:11,color:A.text,padding:"2px 0"}}>
+                      <span>{p.name} ×{p.qty}</span>
+                      <span style={{fontWeight:700}}>{(p.prix*p.qty).toLocaleString("fr-FR")} F</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:cmd.status==="En attente"?10:0}}>
+                  <div style={{fontSize:10,color:"#BBB"}}>{cmd.date}</div>
+                  <div style={{fontSize:14,fontWeight:800,color:A.primary}}>{cmd.total.toLocaleString("fr-FR")} FCFA</div>
+                </div>
+                {cmd.status==="En attente"&&(
+                  <div style={{display:"flex",gap:8}}>
+                    <button onClick={()=>validerCmd(cmd.id)} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#059669,#047857)",color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer"}}>✅ Valider</button>
+                    <button onClick={()=>rejeterCmd(cmd.id)} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:`linear-gradient(135deg,${A.accent},#A01515)`,color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer"}}>❌ Rejeter</button>
+                  </div>
+                )}
+              </div>
+            ))}
+            {filteredCmds.length===0&&<div style={{textAlign:"center",padding:"40px 0",color:A.sub,fontSize:12}}>Aucune commande {cmdFilter!=="Toutes"?cmdFilter.toLowerCase():""}</div>}
+          </div>
+        )}
+
+        {/* ══ CRÉDITS ══ */}
+        {adminTab==="credits"&&(
+          <div style={{padding:"14px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+              <div style={{fontSize:15,fontWeight:800,color:A.text}}>Demandes de crédit</div>
+              <button onClick={()=>setModal("addCredit")} style={{background:A.accent,color:"#fff",border:"none",borderRadius:10,padding:"8px 12px",fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Octroyer</button>
+            </div>
+            <div style={{fontSize:10,color:A.sub,marginBottom:10}}>{creditEnAttente} en attente</div>
+            <div style={{display:"flex",gap:6,marginBottom:12,overflowX:"auto",paddingBottom:4}}>
+              {["Toutes","En attente","En cours","Remboursé"].map(f=>(
+                <button key={f} onClick={()=>setCreditFilter(f)} style={{padding:"5px 12px",borderRadius:20,fontSize:10,fontWeight:700,border:"none",cursor:"pointer",whiteSpace:"nowrap",
+                  background:creditFilter===f?A.accent:"#FEE2E2",color:creditFilter===f?"#fff":A.accent}}>
+                  {f}{f==="En attente"&&creditEnAttente>0?` (${creditEnAttente})`:""}
+                </button>
+              ))}
+            </div>
+            {filteredCredits.map((cr,i)=>(
+              <div key={i} style={{background:A.white,borderRadius:14,padding:"14px",marginBottom:10,boxShadow:"0 1px 8px rgba(26,58,143,0.07)",border:cr.status==="En attente"?"2px solid #F59E0B":"2px solid transparent"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:800,color:A.text}}>{cr.id}</div>
+                    <div style={{fontSize:10,color:A.sub}}>{cr.clientName} · {cr.client}</div>
+                  </div>
+                  <span style={{fontSize:10,fontWeight:700,padding:"3px 10px",borderRadius:20,
+                    background:cr.status==="En attente"?"#FFF3CD":cr.status==="En cours"?"#EEF2FF":"#D1FAE5",
+                    color:cr.status==="En attente"?"#92400E":cr.status==="En cours"?A.primary:"#059669"}}>
+                    {cr.status}
+                  </span>
+                </div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div style={{fontSize:11,color:A.sub}}>Type: <b>{cr.type}</b> · {cr.date}</div>
+                  <div style={{fontSize:15,fontWeight:800,color:A.accent}}>{cr.montant.toLocaleString("fr-FR")} F</div>
+                </div>
+                {cr.status==="En attente"&&(
+                  <div style={{display:"flex",gap:8,marginTop:10}}>
+                    <button onClick={()=>{setCredits(cs=>cs.map(c=>c.id===cr.id?{...c,status:"En cours"}:c));ok("✅ Crédit approuvé !");}} style={{flex:1,padding:"9px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#059669,#047857)",color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer"}}>✅ Approuver</button>
+                    <button onClick={()=>{setCredits(cs=>cs.map(c=>c.id===cr.id?{...c,status:"Rejeté"}:c));ok("❌ Crédit rejeté.");}} style={{flex:1,padding:"9px",borderRadius:10,border:"none",background:`linear-gradient(135deg,${A.accent},#A01515)`,color:"#fff",fontSize:12,fontWeight:800,cursor:"pointer"}}>❌ Rejeter</button>
+                  </div>
+                )}
+              </div>
+            ))}
+            {filteredCredits.length===0&&<div style={{textAlign:"center",padding:"40px 0",color:A.sub,fontSize:12}}>Aucune demande</div>}
+          </div>
+        )}
+
+      </div>
+
+      {/* ── Tab Bar ── */}
+      <div style={{position:"absolute",bottom:0,left:0,right:0,background:A.white,borderTop:`1px solid ${A.light}`,display:"flex",padding:"8px 0 22px",boxShadow:"0 -4px 20px rgba(26,58,143,0.08)"}}>
+        {[
+          {id:"dashboard",icon:"📊",label:"Dashboard"},
+          {id:"products",icon:"📦",label:"Produits"},
+          {id:"clients",icon:"👥",label:"Clients"},
+          {id:"commandes",icon:"🛒",label:"Commandes",badge:cmdEnAttente},
+          {id:"credits",icon:"💳",label:"Crédits",badge:creditEnAttente},
+        ].map(t=>(
+          <div key={t.id} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,cursor:"pointer",padding:"3px 0",position:"relative"}} onClick={()=>setAdminTab(t.id)}>
+            <span style={{fontSize:18,filter:adminTab===t.id?"none":"grayscale(1) opacity(0.4)"}}>{t.icon}</span>
+            {t.badge>0&&<div style={{position:"absolute",top:0,right:"10%",background:"#F59E0B",color:"#fff",fontSize:7,fontWeight:800,width:13,height:13,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{t.badge}</div>}
+            <span style={{fontSize:8,fontWeight:700,color:adminTab===t.id?A.primary:A.sub,textAlign:"center"}}>{t.label}</span>
+            {adminTab===t.id&&<div style={{width:3,height:3,borderRadius:"50%",background:A.accent}}/>}
+          </div>
+        ))}
+      </div>
+
+      {/* ══ MODALS ══ */}
+      {/* Modal Ajout Produit */}
+      {modal==="addProd"&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.6)",display:"flex",alignItems:"flex-end",zIndex:30}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:"24px 24px 0 0",padding:"22px 20px 40px",width:"100%",boxSizing:"border-box",maxHeight:"85%",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 14px"}}/>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:14}}>📦 Nouveau produit</div>
+            <AdminInput label="NOM DU PRODUIT" value={newProd.name} onChange={e=>setNewProd(p=>({...p,name:e.target.value}))} placeholder="Ex: Lait concentré 500g"/>
+            <AdminInput label="PRIX (FCFA)" value={newProd.price} onChange={e=>setNewProd(p=>({...p,price:e.target.value}))} placeholder="Ex: 1500" type="number"/>
+            <AdminInput label="STOCK INITIAL" value={newProd.stock} onChange={e=>setNewProd(p=>({...p,stock:e.target.value}))} placeholder="Ex: 50" type="number"/>
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:4}}>CATÉGORIE</div>
+              <select value={newProd.cat} onChange={e=>setNewProd(p=>({...p,cat:e.target.value}))} style={inputStyle}>
+                {["Épicerie","Santé","Mode","Tech","Frais"].map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:6}}>ICÔNE</div>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {["📦","🛢️","🧴","👘","📱","🍚","💊","🥫","🧃","🍎","👟","💡"].map(ic=>(
+                  <div key={ic} onClick={()=>setNewProd(p=>({...p,icon:ic}))}
+                    style={{width:36,height:36,borderRadius:8,background:newProd.icon===ic?"#EEF2FF":"#F5F5F5",border:newProd.icon===ic?`2px solid ${A.primary}`:"2px solid transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,cursor:"pointer"}}>
+                    {ic}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={addProduct} style={{width:"100%",padding:13,borderRadius:12,background:`linear-gradient(135deg,${A.primary},${A.primaryDark})`,color:"#fff",border:"none",fontSize:14,fontWeight:800,cursor:"pointer"}}>
+              Enregistrer le produit
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Modifier Produit */}
+      {modal==="editProd"&&editProd&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.6)",display:"flex",alignItems:"flex-end",zIndex:30}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:"24px 24px 0 0",padding:"22px 20px 40px",width:"100%",boxSizing:"border-box",maxHeight:"85%",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 14px"}}/>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:14}}>✏️ Modifier le produit</div>
+            <AdminInput label="NOM" value={editProd.name} onChange={e=>setEditProd(p=>({...p,name:e.target.value}))} placeholder="Nom du produit"/>
+            <AdminInput label="PRIX (FCFA)" value={editProd.price} onChange={e=>setEditProd(p=>({...p,price:e.target.value}))} placeholder="Prix" type="number"/>
+            <AdminInput label="STOCK" value={editProd.stock} onChange={e=>setEditProd(p=>({...p,stock:e.target.value}))} placeholder="Stock" type="number"/>
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:4}}>CATÉGORIE</div>
+              <select value={editProd.cat} onChange={e=>setEditProd(p=>({...p,cat:e.target.value}))} style={inputStyle}>
+                {["Épicerie","Santé","Mode","Tech","Frais"].map(c=><option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:6}}>ICÔNE</div>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {["📦","🛢️","🧴","👘","📱","🍚","💊","🥫","🧃","🍎","👟","💡"].map(ic=>(
+                  <div key={ic} onClick={()=>setEditProd(p=>({...p,icon:ic}))}
+                    style={{width:36,height:36,borderRadius:8,background:editProd.icon===ic?"#EEF2FF":"#F5F5F5",border:editProd.icon===ic?`2px solid ${A.primary}`:"2px solid transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,cursor:"pointer"}}>
+                    {ic}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={saveEditProd} style={{width:"100%",padding:13,borderRadius:12,background:`linear-gradient(135deg,${A.primary},${A.primaryDark})`,color:"#fff",border:"none",fontSize:14,fontWeight:800,cursor:"pointer"}}>
+              Enregistrer les modifications
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Ajout Client */}
+      {modal==="addClient"&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.6)",display:"flex",alignItems:"flex-end",zIndex:30}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:"24px 24px 0 0",padding:"22px 20px 40px",width:"100%",boxSizing:"border-box"}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 14px"}}/>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:14}}>👤 Nouveau client</div>
+            <AdminInput label="NOM COMPLET" value={newClient.name} onChange={e=>setNewClient(p=>({...p,name:e.target.value}))} placeholder="Ex: Kouassi Diomandé"/>
+            <AdminInput label="TÉLÉPHONE" value={newClient.phone} onChange={e=>setNewClient(p=>({...p,phone:e.target.value}))} placeholder="+225 07 00 00 000"/>
+            <div style={{background:A.light,borderRadius:10,padding:"10px 14px",marginBottom:14,fontSize:11,color:A.primary}}>
+              💡 Un identifiant MAR-XXXX sera généré automatiquement.
+            </div>
+            <button onClick={addClient} style={{width:"100%",padding:13,borderRadius:12,background:"linear-gradient(135deg,#059669,#047857)",color:"#fff",border:"none",fontSize:14,fontWeight:800,cursor:"pointer"}}>
+              Enregistrer le client
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Modifier Client */}
+      {modal==="editClient"&&editClient&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.6)",display:"flex",alignItems:"flex-end",zIndex:30}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:"24px 24px 0 0",padding:"22px 20px 40px",width:"100%",boxSizing:"border-box"}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 14px"}}/>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:14}}>✏️ Modifier le client</div>
+            <AdminInput label="NOM COMPLET" value={editClient.name} onChange={e=>setEditClient(p=>({...p,name:e.target.value}))} placeholder="Nom"/>
+            <AdminInput label="TÉLÉPHONE" value={editClient.phone} onChange={e=>setEditClient(p=>({...p,phone:e.target.value}))} placeholder="Téléphone"/>
+            <div style={{marginBottom:14,background:"#EEF2FF",borderRadius:10,padding:"10px 14px",fontSize:11,color:A.primary}}>
+              🆔 Identifiant : <b>{editClient.id}</b> (non modifiable)
+            </div>
+            <button onClick={saveEditClient} style={{width:"100%",padding:13,borderRadius:12,background:`linear-gradient(135deg,${A.primary},${A.primaryDark})`,color:"#fff",border:"none",fontSize:14,fontWeight:800,cursor:"pointer"}}>
+              Enregistrer les modifications
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Octroyer Crédit */}
+      {modal==="addCredit"&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.6)",display:"flex",alignItems:"flex-end",zIndex:30}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:"24px 24px 0 0",padding:"22px 20px 40px",width:"100%",boxSizing:"border-box"}} onClick={e=>e.stopPropagation()}>
+            <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 14px"}}/>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:14}}>💳 Octroyer un crédit</div>
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:4}}>CLIENT</div>
+              <select value={newCredit.clientId} onChange={e=>setNewCredit(p=>({...p,clientId:e.target.value}))} style={inputStyle}>
+                <option value="">-- Sélectionner --</option>
+                {clients.filter(c=>c.status==="Actif").map(c=><option key={c.id} value={c.id}>{c.name} ({c.id})</option>)}
+              </select>
+            </div>
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:11,fontWeight:700,color:A.sub,marginBottom:4}}>TYPE</div>
+              <select value={newCredit.type} onChange={e=>setNewCredit(p=>({...p,type:e.target.value}))} style={inputStyle}>
+                {["Express","Projet","Solidaire"].map(t=><option key={t}>{t}</option>)}
+              </select>
+            </div>
+            <AdminInput label="MONTANT (FCFA)" value={newCredit.montant} onChange={e=>setNewCredit(p=>({...p,montant:e.target.value}))} placeholder="Ex: 50000" type="number"/>
+            <button onClick={addCredit} style={{width:"100%",padding:13,borderRadius:12,background:`linear-gradient(135deg,${A.accent},#A01515)`,color:"#fff",border:"none",fontSize:14,fontWeight:800,cursor:"pointer"}}>
+              Accorder le crédit
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmation Suppression */}
+      {modal==="confirmDel"&&delTarget&&(
+        <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.7)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:30,padding:20}} onClick={closeModal}>
+          <div style={{background:A.white,borderRadius:20,padding:"28px 24px",width:"100%",maxWidth:360,boxSizing:"border-box",textAlign:"center"}} onClick={e=>e.stopPropagation()}>
+            <div style={{fontSize:44,marginBottom:12}}>🗑️</div>
+            <div style={{fontSize:16,fontWeight:800,color:A.text,marginBottom:8}}>Confirmer la suppression</div>
+            <div style={{fontSize:13,color:A.sub,marginBottom:24}}>
+              Voulez-vous vraiment supprimer <b>{delTarget.name}</b> ? Cette action est irréversible.
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={closeModal} style={{flex:1,padding:12,borderRadius:12,background:A.light,color:A.text,border:"none",fontSize:13,fontWeight:700,cursor:"pointer"}}>
+                Annuler
+              </button>
+              <button onClick={()=>{delTarget.type==="prod"?deleteProd(delTarget.id):deleteClient(delTarget.id);}} style={{flex:1,padding:12,borderRadius:12,background:`linear-gradient(135deg,${A.accent},#A01515)`,color:"#fff",border:"none",fontSize:13,fontWeight:800,cursor:"pointer"}}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
 
 /* ── AppShell responsive ─────────────────────────── */
 function AppShell({ children }) {
@@ -363,7 +1008,9 @@ function AppShell({ children }) {
 export default function App() {
   const [showSplash,setShowSplash]=useState(true);
   const [showLogin,setShowLogin]=useState(false);
+  const [isAdmin,setIsAdmin]=useState(false);
   const [tab,setTab]=useState("home");
+  const [adminTab,setAdminTab]=useState("dashboard");
   const [activeCat,setActiveCat]=useState(0);
   const [cart,setCart]=useState([]);
   const [showCart,setShowCart]=useState(false);
@@ -376,8 +1023,9 @@ export default function App() {
   const cartCount=cart.reduce((s,x)=>s+x.qty,0);
   const closeModal=()=>{setShowLoan(null);setLoanSuccess(false);setLoanAmount("");};
 
-  // Ecran visible : splash → login → app
-  const showApp = !showSplash && !showLogin;
+  // Ecran visible : splash → login → app/admin
+  const showApp = !showSplash && !showLogin && !isAdmin;
+  const showAdminApp = !showSplash && !showLogin && isAdmin;
 
   return (
     <AppShell>
@@ -389,11 +1037,17 @@ export default function App() {
 
         {/* ── Login ── */}
         {!showSplash && showLogin && (
-          <LoginScreen onLogin={()=>setShowLogin(false)}/>
+          <LoginScreen onLogin={(role)=>{ setShowLogin(false); setIsAdmin(role==="admin"); }}/>
         )}
 
-        {/* ── App principale : uniquement quand splash ET login sont terminés ── */}
-        {!showApp && !showSplash && !showLogin && null}
+        {/* ── Admin ── */}
+        {showAdminApp && (
+          <AdminApp
+            onLogout={()=>{ setIsAdmin(false); setShowLogin(true); }}
+            adminTab={adminTab}
+            setAdminTab={setAdminTab}
+          />
+        )}
 
         {showApp && <>{/* Status */}
         <div style={{background:C.primary,padding:"12px 28px 6px",display:"flex",justifyContent:"space-between",color:C.white,fontSize:12,fontWeight:600}}>
@@ -409,7 +1063,7 @@ export default function App() {
               </div>
               <div>
                 <div style={{fontSize:15,fontWeight:800,color:C.white,letterSpacing:1}}>MARAE CENTER</div>
-                <div style={{fontSize:9,color:"rgba(255,255,255,0.55)",letterSpacing:2}}>BOUTIQUE & MUTUELLE</div>
+                <div style={{fontSize:9,color:"rgba(255,255,255,0.55)",letterSpacing:2}}>VOTRE APPLICATION MUTUALISTE</div>
               </div>
             </div>
             <div style={{display:"flex",gap:12}}>
