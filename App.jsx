@@ -236,20 +236,44 @@ function LoginScreen({ onLogin }) {
   const [error, setError] = useState("");
   useEffect(() => { setTimeout(() => setEntered(true), 80); }, []);
 
+  // ── Comptes utilisateurs autorisés ──
+  const USERS = [
+    { id: "MAR-0001", name: "Kouassi Diomandé" },
+    { id: "MAR-0002", name: "Aminata Koné" },
+    { id: "MAR-0003", name: "Bamba Traoré" },
+    { id: "MAR-0004", name: "Fatou Coulibaly" },
+    { id: "MAR-0005", name: "Koffi Assouman" },
+    { id: "MAR-0006", name: "Marie-Claire Gbagbo" },
+    { id: "MAR-0007", name: "Ibrahim Sanogo" },
+    { id: "MAR-0008", name: "Adjoua Brou" },
+  ];
+
   const login = () => {
     if (!id.trim()) { setError("Veuillez entrer votre identifiant."); return; }
-    // Si identifiant admin mais mdp vide ou incorrect
-    if (id.trim().toLowerCase() === "shevaron") {
+
+    const idSaisie = id.trim().toUpperCase();
+    const idMin = id.trim().toLowerCase();
+
+    // Vérification admin
+    if (idMin === "shevaron") {
       if (!pw.trim()) { setError("Veuillez entrer le mot de passe admin."); return; }
       if (pw.trim() !== "Hacksharing") { setError("Mot de passe admin incorrect."); return; }
     }
+
+    // Vérification utilisateur
+    const userFound = USERS.find(u => u.id === idSaisie);
+    if (idMin !== "shevaron" && !userFound) {
+      setError("Identifiant introuvable. Vérifiez votre ID (ex: MAR-0001).");
+      return;
+    }
+
     setError(""); setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      if (id.trim().toLowerCase() === "shevaron" && pw.trim() === "Hacksharing") {
+      if (idMin === "shevaron") {
         onLogin("admin");
       } else {
-        onLogin("user");
+        onLogin("user", userFound);
       }
     }, 1600);
   };
@@ -1072,6 +1096,7 @@ export default function App() {
   const [showSplash,setShowSplash]=useState(true);
   const [showLogin,setShowLogin]=useState(false);
   const [isAdmin,setIsAdmin]=useState(false);
+  const [currentUser,setCurrentUser]=useState(null);
   const [tab,setTab]=useState("home");
   const [adminTab,setAdminTab]=useState("dashboard");
   const [activeCat,setActiveCat]=useState(0);
@@ -1100,7 +1125,7 @@ export default function App() {
 
         {/* ── Login ── */}
         {!showSplash && showLogin && (
-          <LoginScreen onLogin={(role)=>{ setShowLogin(false); setIsAdmin(role==="admin"); }}/>
+          <LoginScreen onLogin={(role, user)=>{ setShowLogin(false); setIsAdmin(role==="admin"); if(user) setCurrentUser(user); }}/>
         )}
 
         {/* ── Admin ── */}
@@ -1277,8 +1302,8 @@ export default function App() {
               <div style={{display:"flex",alignItems:"center",gap:14,background:C.card,borderRadius:16,padding:16,marginBottom:14,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
                 <div style={{width:56,height:56,borderRadius:18,background:`linear-gradient(135deg,${C.primary},${C.accent})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:C.white,fontWeight:700}}>KD</div>
                 <div>
-                  <div style={{fontSize:16,fontWeight:800,color:C.text,marginBottom:2}}>Kouassi Diomandé</div>
-                  <div style={{fontSize:12,color:C.sub}}>+225 07 00 00 000</div>
+                  <div style={{fontSize:16,fontWeight:800,color:C.text,marginBottom:2}}>{currentUser?.name || "Utilisateur"}</div>
+                  <div style={{fontSize:12,color:C.sub}}>{currentUser?.id || "MAR-XXXX"}</div>
                   <div style={{background:C.accent,color:C.white,fontSize:10,fontWeight:800,padding:"2px 8px",borderRadius:20,marginTop:4,display:"inline-block"}}>⭐ Membre Premium</div>
                 </div>
               </div>
