@@ -376,13 +376,26 @@ export default function App() {
   const cartCount=cart.reduce((s,x)=>s+x.qty,0);
   const closeModal=()=>{setShowLoan(null);setLoanSuccess(false);setLoanAmount("");};
 
+  // Ecran visible : splash → login → app
+  const showApp = !showSplash && !showLogin;
+
   return (
     <AppShell>
 
-        {showSplash && <SplashScreen onDone={()=>{setShowSplash(false);setShowLogin(true);}}/>}
-        {!showSplash && showLogin && <LoginScreen onLogin={()=>setShowLogin(false)}/>}
+        {/* ── Splash ── */}
+        {showSplash && (
+          <SplashScreen onDone={()=>{setShowSplash(false);setShowLogin(true);}}/>
+        )}
 
-        {/* Status */}
+        {/* ── Login ── */}
+        {!showSplash && showLogin && (
+          <LoginScreen onLogin={()=>setShowLogin(false)}/>
+        )}
+
+        {/* ── App principale : uniquement quand splash ET login sont terminés ── */}
+        {!showApp && !showSplash && !showLogin && null}
+
+        {showApp && <>{/* Status */}
         <div style={{background:C.primary,padding:"12px 28px 6px",display:"flex",justifyContent:"space-between",color:C.white,fontSize:12,fontWeight:600}}>
           <span>9:41</span><span>📶 🔋</span>
         </div>
@@ -553,94 +566,4 @@ export default function App() {
                 </div>
               </div>
               {[{icon:"👤",label:"Mon profil"},{icon:"📦",label:"Mes commandes"},{icon:"💳",label:"Mes crédits"},{icon:"📍",label:"Mes adresses"},{icon:"🔔",label:"Notifications"},{icon:"🔒",label:"Sécurité"},{icon:"❓",label:"Aide & Support"},{icon:"🚪",label:"Déconnexion"}].map((m,i)=>(
-                <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"13px 16px",background:C.card,borderRadius:14,marginBottom:8,cursor:"pointer",boxShadow:"0 1px 4px rgba(26,58,143,0.05)"}}>
-                  <div style={{width:38,height:38,borderRadius:10,background:C.light,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>{m.icon}</div>
-                  <span style={{flex:1,fontSize:13,fontWeight:600,color:C.text}}>{m.label}</span>
-                  <span style={{color:C.sub,fontSize:16}}>›</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Tab Bar */}
-        <div style={{position:"absolute",bottom:0,left:0,right:0,background:C.white,borderTop:`1px solid ${C.light}`,display:"flex",padding:"10px 0 24px",boxShadow:"0 -4px 20px rgba(26,58,143,0.08)"}}>
-          {[{id:"home",icon:"🏠",label:"Accueil"},{id:"orders",icon:"📦",label:"Commandes"},{id:"credit",icon:"💳",label:"Mutuelle"},{id:"profile",icon:"👤",label:"Profil"}].map(t=>(
-            <div key={t.id} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4,cursor:"pointer",padding:"4px 0"}} onClick={()=>setTab(t.id)}>
-              <span style={{fontSize:22,filter:tab===t.id?"none":"grayscale(1) opacity(0.45)"}}>{t.icon}</span>
-              <span style={{fontSize:9,fontWeight:700,letterSpacing:0.5,color:tab===t.id?C.primary:C.sub}}>{t.label}</span>
-              {tab===t.id&&<div style={{width:5,height:5,borderRadius:"50%",background:C.accent}}/>}
-            </div>
-          ))}
-        </div>
-
-        {/* Panier */}
-        {showCart&&(
-          <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.45)",zIndex:10}} onClick={()=>setShowCart(false)}>
-            <div style={{position:"absolute",bottom:0,left:0,right:0,background:C.white,borderRadius:"24px 24px 0 0",padding:"20px 20px 90px",maxHeight:"72%",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
-              <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 16px"}}/>
-              <div style={{fontSize:17,fontWeight:800,color:C.text,marginBottom:14}}>Mon Panier 🛒</div>
-              {cart.length===0?(
-                <div style={{textAlign:"center",padding:"40px 0",color:C.sub}}><div style={{fontSize:40,marginBottom:8}}>🛒</div><div>Votre panier est vide</div></div>
-              ):<>
-                {cart.map(item=>(
-                  <div key={item.id} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",borderBottom:`1px solid ${C.light}`}}>
-                    <div style={{width:48,height:48,borderRadius:12,background:item.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>{item.icon}</div>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:13,fontWeight:700,color:C.text}}>{item.name}</div>
-                      <div style={{fontSize:12,color:C.primary,fontWeight:700}}>{item.price} FCFA</div>
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <button style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.primary}`,background:"transparent",color:C.primary,fontSize:16,cursor:"pointer",fontWeight:700}} onClick={()=>setCart(c=>c.map(x=>x.id===item.id?{...x,qty:Math.max(1,x.qty-1)}:x))}>−</button>
-                      <span style={{fontSize:14,fontWeight:700,color:C.text,minWidth:18,textAlign:"center"}}>{item.qty}</span>
-                      <button style={{width:28,height:28,borderRadius:8,border:`1px solid ${C.primary}`,background:"transparent",color:C.primary,fontSize:16,cursor:"pointer",fontWeight:700}} onClick={()=>addToCart(item)}>+</button>
-                    </div>
-                  </div>
-                ))}
-                <div style={{display:"flex",justifyContent:"space-between",marginTop:14,padding:"12px 0",borderTop:"2px solid #F0F0F0"}}>
-                  <span style={{fontSize:15,fontWeight:700,color:C.text}}>Total</span>
-                  <span style={{fontSize:17,fontWeight:800,color:C.primary}}>{cartTotal.toLocaleString("fr-FR")} FCFA</span>
-                </div>
-                <button style={{background:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",borderRadius:14,padding:14,width:"100%",fontSize:15,fontWeight:800,cursor:"pointer",marginTop:8}}>Commander maintenant</button>
-              </>}
-            </div>
-          </div>
-        )}
-
-        {/* Modal Crédit */}
-        {showLoan&&(
-          <div style={{position:"absolute",inset:0,background:"rgba(13,31,92,0.65)",display:"flex",alignItems:"flex-end",zIndex:20,backdropFilter:"blur(4px)"}} onClick={closeModal}>
-            <div style={{background:C.white,borderRadius:"24px 24px 0 0",padding:"24px 20px 90px",width:"100%",boxSizing:"border-box"}} onClick={e=>e.stopPropagation()}>
-              <div style={{width:40,height:4,background:"#DDD",borderRadius:2,margin:"0 auto 16px"}}/>
-              {!loanSuccess?<>
-                <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:4}}>{showLoan.name}</div>
-                <div style={{fontSize:12,color:C.sub,marginBottom:20}}>{showLoan.desc} • Taux {showLoan.rate}</div>
-                <div style={{marginBottom:12}}>
-                  <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>MONTANT SOUHAITÉ (FCFA)</div>
-                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: 50 000" value={loanAmount} onChange={e=>setLoanAmount(e.target.value)}/>
-                </div>
-                <div style={{marginBottom:12}}>
-                  <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>DURÉE</div>
-                  <select style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}}>
-                    {["1 mois","3 mois","6 mois","12 mois"].map(o=><option key={o}>{o}</option>)}
-                  </select>
-                </div>
-                <div style={{marginBottom:16}}>
-                  <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>MOTIF DU CRÉDIT</div>
-                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: Achat marchandises..."/>
-                </div>
-                <button style={{background:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",borderRadius:14,padding:14,width:"100%",fontSize:15,fontWeight:800,cursor:"pointer"}} onClick={()=>setTimeout(()=>setLoanSuccess(true),600)}>Soumettre ma demande</button>
-              </>:(
-                <div style={{background:C.light,borderRadius:16,padding:20,textAlign:"center"}}>
-                  <div style={{fontSize:50,marginBottom:12}}>✅</div>
-                  <div style={{fontSize:17,fontWeight:800,color:C.primary,marginBottom:8}}>Demande envoyée !</div>
-                  <div style={{fontSize:12,color:C.sub,marginBottom:16}}>Votre demande a été soumise. Réponse sous 48h.</div>
-                  <button style={{background:`linear-gradient(135deg,${C.accent},#A01515)`,color:C.white,border:"none",borderRadius:14,padding:14,width:"100%",fontSize:15,fontWeight:800,cursor:"pointer"}} onClick={closeModal}>Fermer</button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-    </AppShell>
-  );
-}
+                <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"13px 16px",background:C.card,borderRadius:14,margi
