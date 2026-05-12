@@ -4,22 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#1E3578" />
-    <meta name="description" content="MARAE CENTER — Votre application mutualiste" />
     <title>MARAE CENTER</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body {
-        font-family: Georgia, serif;
-        background: #1E3578;
-        min-height: 100vh;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      #root { min-height: 100vh; }
+      html { height: 100%; overflow: hidden; position: fixed; width: 100%; }
+      body { height: 100%; overflow: hidden; position: fixed; width: 100%; background: #1E3578; -webkit-font-smoothing: antialiased; }
+      #root { height: 100%; width: 100%; overflow: hidden; position: fixed; top: 0; left: 0; }
     </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/main.jsx"></script>>
+    <script type="module" src="/main.jsx"></script>
   </body>
 </html>
