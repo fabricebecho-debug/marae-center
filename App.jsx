@@ -55,7 +55,7 @@ function CircularProgress({ value, size = 72, stroke = 4 }) {
           style={{ transition:"stroke-dashoffset 0.1s linear" }}/>
       </svg>
       {/* Pourcentage au centre */}
-      <span style={{ fontSize:13, fontWeight:700, color:"white", fontFamily:"Georgia,serif" }}>
+      <span style={{ fontSize:13, fontWeight:700, color:"white", fontFamily:"Century Gothic, Trebuchet MS, sans-serif" }}>
         {value}%
       </span>
     </div>
@@ -129,14 +129,35 @@ function SplashScreen({ onDone }) {
           <MaraeLogo size={160}/>
         </div>
 
-        {/* Slogan */}
+        {/* MARAE CENTER en dégradé + slogan */}
         <div style={{
-          fontSize:13, color:"rgba(255,255,255,0.75)",
-          fontStyle:"italic", letterSpacing:1, fontFamily:"Georgia,serif",
-          transition:"opacity 1.2s ease 0.6s",
+          display:"flex", flexDirection:"column", alignItems:"center", gap:6,
+          transition:"opacity 1.2s ease 0.5s",
           opacity:phase==="hold"?1:0,
         }}>
-          VOTRE APPLICATION MUTUALISTE
+          {/* Texte MARAE CENTER avec dégradé bleu-blanc-rouge via SVG */}
+          <svg viewBox="0 0 320 44" width="310" height="44" xmlns="http://www.w3.org/2000/svg">
+            <text
+              x="160" y="34"
+              textAnchor="middle"
+              fontFamily="'Century Gothic', 'Trebuchet MS', sans-serif"
+              fontWeight="900"
+              fontSize="32"
+              letterSpacing="5"
+              fill="#FFFFFF"
+              style={{filter:"drop-shadow(0px 2px 6px rgba(0,0,0,0.4))"}}
+            >
+              MARAE CENTER
+            </text>
+          </svg>
+          {/* Slogan */}
+          <div style={{
+            fontSize:11, color:"rgba(255,255,255,0.6)",
+            fontStyle:"italic", letterSpacing:2,
+            fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+          }}>
+            VOTRE APPLICATION MUTUALISTE
+          </div>
         </div>
       </div>
 
@@ -180,7 +201,7 @@ function Field({ label, icon, placeholder, value, onChange, type="text", onIconC
       <div style={{display:"flex",alignItems:"center",background:C.white,border:`1.5px solid ${C.light}`,borderRadius:12,overflow:"hidden",boxShadow:"0 2px 6px rgba(0,0,0,0.04)"}}>
         <div style={{padding:"0 14px",fontSize:16,cursor:onIconClick?"pointer":"default",borderRight:`1px solid ${C.light}`}} onClick={onIconClick}>{icon}</div>
         <input type={type} placeholder={placeholder} value={value} onChange={onChange}
-          style={{flex:1,padding:"13px 14px",border:"none",outline:"none",fontSize:13,fontFamily:"Georgia,serif",color:C.text,background:"transparent"}}/>
+          style={{flex:1,padding:"13px 14px",border:"none",outline:"none",fontSize:13,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",color:C.text,background:"transparent"}}/>
       </div>
     </div>
   );
@@ -220,7 +241,7 @@ function LoginScreen({ onLogin }) {
       zIndex:50,
       display:"flex", flexDirection:"column",
       background:`linear-gradient(160deg,${C.primaryDark} 0%,${C.primary} 60%,#2050C0 100%)`,
-      fontFamily:"Georgia,serif",
+      fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
       transition:"opacity 0.6s ease, transform 0.6s ease",
       opacity:entered?1:0,
       transform:entered?"translateY(0)":"translateY(20px)",
@@ -291,7 +312,7 @@ function LoginScreen({ onLogin }) {
               style={{
                 flex:1, padding:"15px 14px",
                 border:"none", outline:"none",
-                fontSize:14, fontFamily:"Georgia,serif",
+                fontSize:14, fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
                 color:C.text, background:"transparent",
               }}
             />
@@ -316,7 +337,7 @@ function LoginScreen({ onLogin }) {
                 placeholder="Mot de passe admin"
                 value={pw}
                 onChange={e=>{ setPw(e.target.value); setError(""); }}
-                style={{flex:1,padding:"15px 14px",border:"none",outline:"none",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:"transparent"}}
+                style={{flex:1,padding:"15px 14px",border:"none",outline:"none",fontSize:14,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",color:C.text,background:"transparent"}}
               />
               <div style={{padding:"0 14px",fontSize:18,cursor:"pointer",color:C.sub}} onClick={()=>setShowPw(v=>!v)}>
                 {showPw?"🔓":"👁️"}
@@ -423,7 +444,7 @@ function AdminInput({label,value,onChange,placeholder,type="text"}) {
     <div style={{marginBottom:12}}>
       <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4,letterSpacing:0.5}}>{label}</div>
       <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-        style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Georgia,serif",outline:"none",background:C.light,boxSizing:"border-box",color:C.text}}/>
+        style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",outline:"none",background:C.light,boxSizing:"border-box",color:C.text}}/>
     </div>
   );
 }
@@ -534,10 +555,10 @@ function AdminApp({ onLogout, adminTab, setAdminTab }) {
   const filteredCmds = cmdFilter==="Toutes"?commandes:commandes.filter(c=>c.status===cmdFilter);
   const filteredCredits = creditFilter==="Toutes"?credits:credits.filter(c=>c.status===creditFilter);
 
-  const inputStyle = {width:"100%",border:`1.5px solid ${A.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Georgia,serif",outline:"none",background:A.light,boxSizing:"border-box",color:A.text};
+  const inputStyle = {width:"100%",border:`1.5px solid ${A.light}`,borderRadius:10,padding:"11px 14px",fontSize:13,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",outline:"none",background:A.light,boxSizing:"border-box",color:A.text};
 
   return (
-    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",background:"#F0F3FA",fontFamily:"Georgia,serif",position:"relative",overflow:"hidden"}}>
+    <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",background:"#F0F3FA",fontFamily:"Century Gothic, Trebuchet MS, sans-serif",position:"relative",overflow:"hidden"}}>
 
       {/* ── Header ── */}
       <div style={{background:`linear-gradient(135deg,${A.primaryDark},${A.primary})`,padding:"14px 20px",color:A.white,flexShrink:0}}>
@@ -1307,17 +1328,17 @@ export default function App() {
                 <div style={{fontSize:12,color:C.sub,marginBottom:20}}>{showLoan.desc} • Taux {showLoan.rate}</div>
                 <div style={{marginBottom:12}}>
                   <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>MONTANT SOUHAITÉ (FCFA)</div>
-                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: 50 000" value={loanAmount} onChange={e=>setLoanAmount(e.target.value)}/>
+                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: 50 000" value={loanAmount} onChange={e=>setLoanAmount(e.target.value)}/>
                 </div>
                 <div style={{marginBottom:12}}>
                   <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>DURÉE</div>
-                  <select style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}}>
+                  <select style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}}>
                     {["1 mois","3 mois","6 mois","12 mois"].map(o=><option key={o}>{o}</option>)}
                   </select>
                 </div>
                 <div style={{marginBottom:16}}>
                   <div style={{fontSize:11,fontWeight:700,color:C.sub,marginBottom:4}}>MOTIF DU CRÉDIT</div>
-                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Georgia,serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: Achat marchandises..."/>
+                  <input style={{width:"100%",border:`1.5px solid ${C.light}`,borderRadius:12,padding:"12px 14px",fontSize:14,fontFamily:"Century Gothic, Trebuchet MS, sans-serif",color:C.text,background:C.light,outline:"none",boxSizing:"border-box"}} placeholder="Ex: Achat marchandises..."/>
                 </div>
                 <button style={{background:`linear-gradient(135deg,${C.primary},${C.primaryDark})`,color:C.white,border:"none",borderRadius:14,padding:14,width:"100%",fontSize:15,fontWeight:800,cursor:"pointer"}} onClick={()=>setTimeout(()=>setLoanSuccess(true),600)}>Soumettre ma demande</button>
               </>:(
