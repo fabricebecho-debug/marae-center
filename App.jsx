@@ -216,14 +216,16 @@ function LoginScreen({ onLogin }) {
 
   return (
     <div style={{
-      position:"absolute", inset:0, zIndex:50,
+      position:"fixed", top:0, left:0, right:0, bottom:0,
+      zIndex:50,
       display:"flex", flexDirection:"column",
       background:`linear-gradient(160deg,${C.primaryDark} 0%,${C.primary} 60%,#2050C0 100%)`,
       fontFamily:"Georgia,serif",
       transition:"opacity 0.6s ease, transform 0.6s ease",
       opacity:entered?1:0,
       transform:entered?"translateY(0)":"translateY(20px)",
-      overflowY:"auto",
+      overflow:"hidden",
+      touchAction:"none",
     }}>
 
       {/* Cercles déco */}
@@ -232,9 +234,10 @@ function LoginScreen({ onLogin }) {
 
       {/* ── Zone logo — haut ── */}
       <div style={{
+        flex:1,
         display:"flex", flexDirection:"column",
         alignItems:"center", justifyContent:"center",
-        paddingTop:64, paddingBottom:28,
+        paddingTop:20, paddingBottom:20,
       }}>
         {/* Logo cercle */}
         <div style={{
@@ -255,11 +258,11 @@ function LoginScreen({ onLogin }) {
 
       {/* ── Carte blanche flottante ── */}
       <div style={{
-        flex:1,
         background:C.white,
         borderRadius:"28px 28px 0 0",
-        padding:"30px 24px 40px",
+        padding:"24px 24px 32px",
         boxShadow:"0 -8px 40px rgba(0,0,0,0.2)",
+        overflow:"hidden",
       }}>
         {/* Poignée */}
         <div style={{width:40,height:4,background:"#E0E0E0",borderRadius:2,margin:"0 auto 24px"}}/>
