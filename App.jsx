@@ -257,6 +257,9 @@ function SplashScreen({ onDone }) {
       <style>{`
         @keyframes spin{to{transform:rotate(360deg);}}
         @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+        @keyframes scrollFlash{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+        .flash-track{display:flex;gap:10px;animation:scrollFlash 20s linear infinite;}
+        .flash-track:hover{animation-play-state:paused;}
         html, body, #root {
           height: 100%;
           width: 100%;
@@ -574,16 +577,16 @@ function BannerSlider({ onCreditClick }) {
             <div style={{position:"absolute",right:14,top:"50%",transform:"translateY(-50%)",fontSize:52,opacity:0.2}}>💸</div>
 
             <div style={{background:"rgba(255,165,0,0.25)",color:"#FFA500",fontSize:10,fontWeight:800,padding:"4px 12px",borderRadius:20,display:"inline-block",marginBottom:8,letterSpacing:1,border:"1px solid rgba(255,165,0,0.5)"}}>
-              🛒 ACHAT À CRÉDIT
+              ACHAT À CRÉDIT
             </div>
-            <div style={{fontSize:19,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+            <div style={{fontSize:15,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
               Achetez maintenant,<br/>
               <span style={{color:"#FFB347"}}>payez en douceur ! 😊</span>
             </div>
             <div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:12,lineHeight:1.7}}>
-              📦 Recevez votre produit <b style={{color:"#fff"}}>aujourd'hui</b><br/>
-              💳 Remboursez en <b style={{color:"#FFB347"}}>plusieurs fois</b> sans stress<br/>
-              ✅ Sans frais cachés • Taux <b style={{color:"#fff"}}>0% le 1er mois</b>
+              Recevez votre produit <b style={{color:"#fff"}}>aujourd'hui</b><br/>
+              Remboursez en <b style={{color:"#FFB347"}}>plusieurs fois</b> sans stress<br/>
+              Sans frais cachés • Taux <b style={{color:"#fff"}}>0% le 1er mois</b>
             </div>
             <div onClick={onCreditClick} style={{
               background:"linear-gradient(135deg,#0EA5E9,#0284C7)",
@@ -592,7 +595,7 @@ function BannerSlider({ onCreditClick }) {
               fontSize:12,fontWeight:800,cursor:"pointer",
               fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
             }}>
-              Je veux acheter à crédit →
+              Je veux acheter à crédit
             </div>
           </div>
         )}
@@ -609,21 +612,20 @@ function BannerSlider({ onCreditClick }) {
             <div style={{position:"absolute",right:-30,top:-30,width:130,height:130,borderRadius:"50%",border:"1px solid rgba(255,255,255,0.05)"}}/>
 
             <div style={{background:"rgba(255,165,0,0.25)",color:"#FFA500",fontSize:9,fontWeight:800,padding:"3px 10px",borderRadius:20,display:"inline-block",marginBottom:6,letterSpacing:1,border:"1px solid rgba(255,165,0,0.5)"}}>
-              ⚡ CRÉDIT INSTANTANÉ
+              CRÉDIT INSTANTANÉ
             </div>
-            <div style={{fontSize:18,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
-              Besoin d'argent ?? 🤔<br/>
-              <span style={{color:"#FFA500",fontSize:19}}>LA MARAE GÈRE ÇA !! 💪</span>
+            <div style={{fontSize:15,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+              Besoin d'argent ??<br/>
+              <span style={{color:"#FFA500",fontSize:16}}>LA MARAE GÈRE ÇA !!</span>
             </div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:10,lineHeight:1.6}}>
-              Recevez jusqu'à <b style={{color:"#FFA500",fontSize:14}}>150 000 FCFA</b><br/>
-              directement sur votre <b style={{color:"#fff"}}>compte mobile</b> ⚡
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:8,lineHeight:1.5}}>
+              Recevez jusqu'à <b style={{color:"#FFA500",fontSize:13}}>150 000 FCFA</b> directement sur votre <b style={{color:"#fff"}}>compte mobile</b>
             </div>
 
             {/* Logos + bouton demande */}
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
               {/* Logos moyens de paiement */}
-              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+              <div style={{display:"flex",gap:5,alignItems:"center"}}>
                 {[
                   {img:WAVE_IMG,   label:"Wave",   bg:"#00B5E2"},
                   {img:ORANGE_IMG, label:"Orange", bg:"#FF6600"},
@@ -632,16 +634,16 @@ function BannerSlider({ onCreditClick }) {
                 ].map((pm,i)=>(
                   <div key={i} style={{
                     background:pm.bg,
-                    borderRadius:9,
-                    padding:"4px 6px",
+                    borderRadius:8,
+                    padding:"3px 5px",
                     display:"flex",
                     flexDirection:"column",
                     alignItems:"center",
                     gap:2,
-                    boxShadow:"0 2px 8px rgba(0,0,0,0.3)",
+                    boxShadow:"0 2px 6px rgba(0,0,0,0.3)",
                   }}>
                     <img src={pm.img} alt={pm.label}
-                      style={{width:28,height:28,objectFit:"contain",borderRadius:5}}/>
+                      style={{width:24,height:24,objectFit:"contain",borderRadius:4}}/>
                     <span style={{fontSize:6,color:"#fff",fontWeight:700,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>{pm.label}</span>
                   </div>
                 ))}
@@ -653,8 +655,8 @@ function BannerSlider({ onCreditClick }) {
                 color:"#fff",
                 border:"none",
                 borderRadius:10,
-                padding:"10px 12px",
-                fontSize:10,
+                padding:"8px 10px",
+                fontSize:9,
                 fontWeight:800,
                 cursor:"pointer",
                 fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
@@ -662,10 +664,10 @@ function BannerSlider({ onCreditClick }) {
                 display:"flex",
                 flexDirection:"column",
                 alignItems:"center",
-                gap:4,
+                gap:2,
                 whiteSpace:"nowrap",
               }}>
-                <span style={{fontSize:18}}>💸</span>
+                
                 <span>Demander</span>
                 <span>un prêt</span>
               </button>
@@ -1538,7 +1540,7 @@ export default function App() {
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                 <div style={{display:"flex",alignItems:"center",gap:8}}>
                   <div style={{background:"#E63030",borderRadius:6,padding:"3px 8px",display:"flex",alignItems:"center",gap:4}}>
-                    <span style={{fontSize:12}}>⚡</span>
+                    
                     <span style={{fontSize:11,fontWeight:800,color:"#fff",fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>VENTES FLASH</span>
                   </div>
                   <span style={{fontSize:10,color:C.sub}}>Offres limitées</span>
@@ -1547,28 +1549,25 @@ export default function App() {
               </div>
               <div style={{display:"flex",gap:10,overflowX:"auto",paddingBottom:8}}>
                 {[
-                  {id:21,img:SAMSUNGS25_IMG,name:"Samsung S25 Ultra",price:"950 000",old:"1 100 000",discount:"-14%"},
-                  {id:19,img:MACBOOK_IMG,   name:"MacBook Pro M3",  price:"1 200 000",old:"1 500 000",discount:"-20%"},
-                  {id:3, img:SONY_TV_IMG,   name:"Sony TV 55p 4K",  price:"380 000",old:"450 000",   discount:"-16%"},
-                  {id:32,img:PB_IMG,        name:"Baseus PowerBank",price:"22 500", old:"28 000",    discount:"-20%"},
-                  {id:7, img:FRIGO_IMG,     name:"Réfrigérateur Inox",price:"280 000",old:"350 000",discount:"-20%"},
-                ].map((p,i)=>{
-                  const imgMap = {SAMSUNGS25_IMG,MACBOOK_IMG,SONY_TV_IMG,PB_IMG,FRIGO_IMG};
-                  const imgSrc = p.img;
-                  return (
-                    <div key={i} style={{minWidth:130,background:C.white,borderRadius:12,overflow:"hidden",boxShadow:"0 2px 10px rgba(26,58,143,0.08)",flexShrink:0,position:"relative"}}>
-                      <div style={{position:"absolute",top:6,left:6,background:"#E63030",color:"#fff",fontSize:8,fontWeight:800,padding:"2px 6px",borderRadius:4,zIndex:1}}>{p.discount}</div>
-                      <div style={{height:90,background:"#F5F7FC",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-                        <img src={imgSrc} alt={p.name} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
-                      </div>
-                      <div style={{padding:"8px 8px 10px"}}>
-                        <div style={{fontSize:10,fontWeight:700,color:C.text,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
-                        <div style={{fontSize:12,fontWeight:800,color:C.primary}}>{p.price} F</div>
-                        <div style={{fontSize:9,color:"#E63030",textDecoration:"line-through"}}>{p.old} F</div>
-                      </div>
+                  {img:SAMSUNGS25_IMG,name:"Samsung S25 Ultra",   price:"950 000", old:"1 100 000",discount:"-14%"},
+                  {img:MACBOOK_IMG,   name:"MacBook Pro M3",       price:"1 200 000",old:"1 500 000",discount:"-20%"},
+                  {img:SONY_TV_IMG,   name:"Sony TV 55p 4K",       price:"380 000", old:"450 000",  discount:"-16%"},
+                  {img:PB_IMG,        name:"Baseus PowerBank",      price:"22 500",  old:"28 000",   discount:"-20%"},
+                  {img:FRIGO_IMG,     name:"Réfrigérateur Inox",    price:"280 000", old:"350 000",  discount:"-20%"},
+                  {img:JBL_IMG,       name:"JBL Tune 510BT",        price:"19 500",  old:"25 000",   discount:"-22%"},
+                ].map((p,i)=>(
+                  <div key={i} style={{minWidth:130,maxWidth:130,background:C.white,borderRadius:12,overflow:"hidden",boxShadow:"0 2px 10px rgba(26,58,143,0.08)",flexShrink:0,position:"relative"}}>
+                    <div style={{position:"absolute",top:6,left:6,background:"#E63030",color:"#fff",fontSize:8,fontWeight:800,padding:"2px 6px",borderRadius:4,zIndex:1}}>{p.discount}</div>
+                    <div style={{height:90,background:"#F5F7FC",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+                      <img src={p.img} alt={p.name} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
                     </div>
-                  );
-                })}
+                    <div style={{padding:"8px 8px 10px"}}>
+                      <div style={{fontSize:10,fontWeight:700,color:C.text,marginBottom:2,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
+                      <div style={{fontSize:12,fontWeight:800,color:C.primary}}>{p.price} F</div>
+                      <div style={{fontSize:9,color:"#E63030",textDecoration:"line-through"}}>{p.old} F</div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -1577,7 +1576,7 @@ export default function App() {
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
                 <div style={{display:"flex",alignItems:"center",gap:8}}>
                   <div style={{background:"linear-gradient(135deg,#FFD700,#FFA500)",borderRadius:6,padding:"3px 8px",display:"flex",alignItems:"center",gap:4}}>
-                    <span style={{fontSize:12}}>🌟</span>
+                    
                     <span style={{fontSize:11,fontWeight:800,color:"#fff",fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>VENTES SPÉCIALES</span>
                   </div>
                   <span style={{fontSize:10,color:C.sub}}>Sélection du jour</span>
@@ -1593,7 +1592,7 @@ export default function App() {
                   {img:SMARTWATCH_IMG,name:"Smartwatch Ultra 2", price:"45 000",old:"60 000", discount:"-25%"},
                 ].map((p,i)=>(
                   <div key={i} style={{minWidth:130,background:C.white,borderRadius:12,overflow:"hidden",boxShadow:"0 2px 10px rgba(26,58,143,0.08)",flexShrink:0,position:"relative"}}>
-                    <div style={{position:"absolute",top:6,left:6,background:"linear-gradient(135deg,#FFD700,#FFA500)",color:"#fff",fontSize:8,fontWeight:800,padding:"2px 6px",borderRadius:4,zIndex:1}}>🌟 {p.discount}</div>
+                    <div style={{position:"absolute",top:6,left:6,background:"linear-gradient(135deg,#FFD700,#FFA500)",color:"#fff",fontSize:8,fontWeight:800,padding:"2px 6px",borderRadius:4,zIndex:1}}>{p.discount}</div>
                     <div style={{height:90,background:"#FFFBF0",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
                       <img src={p.img} alt={p.name} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
                     </div>
@@ -1657,22 +1656,15 @@ export default function App() {
                         <div style={{fontSize:10,fontWeight:700,color:C.text,marginBottom:3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>{p.name}</div>
                         <div style={{fontSize:12,fontWeight:800,color:C.primary,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>{p.price} F</div>
                         {p.old && <div style={{fontSize:9,color:"#E63030",textDecoration:"line-through"}}>{p.old} F</div>}
-                        {cart.find(x=>x.id===p.id) ? (
-                          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:C.primary,borderRadius:6,overflow:"hidden",height:26,marginTop:5}}>
-                            <button onClick={()=>setCart(c=>c.map(x=>x.id===p.id?{...x,qty:Math.max(1,x.qty-1)}:x))}
-                              style={{width:26,height:26,background:"transparent",border:"none",color:"#fff",fontSize:16,cursor:"pointer",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
-                            <span style={{color:"#fff",fontSize:11,fontWeight:700}}>{cart.find(x=>x.id===p.id)?.qty||0}</span>
-                            <button onClick={()=>addToCart(p)}
-                              style={{width:26,height:26,background:"transparent",border:"none",color:"#fff",fontSize:16,cursor:"pointer",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
-                          </div>
-                        ) : (
-                          <button onClick={()=>addToCart(p)} style={{
-                            width:"100%",height:26,borderRadius:6,marginTop:5,
-                            background:C.primary,color:"#fff",border:"none",
-                            fontSize:10,fontWeight:700,cursor:"pointer",
-                            fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
-                          }}>🛒 Ajouter</button>
-                        )}
+                        <button onClick={e=>{e.stopPropagation();addToCart(p);}} style={{
+                          width:"100%",height:24,borderRadius:5,marginTop:5,
+                          background:C.primary,color:"#fff",border:"none",
+                          fontSize:9,fontWeight:700,cursor:"pointer",
+                          fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
+                          display:"flex",alignItems:"center",justifyContent:"center",gap:3,
+                        }}>
+                          <span style={{fontSize:10}}>🛒</span> Ajouter
+                        </button>
                       </div>
                     </div>
                   );
@@ -1861,7 +1853,7 @@ export default function App() {
                         fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
                         boxShadow:`0 4px 14px rgba(26,58,143,0.3)`,
                       }}>
-                        🛒 Ajouter au panier
+                        Ajouter au panier
                       </button>
                       <button onClick={()=>{
                         const existing = cart.find(x=>x.id===p.id);
@@ -1879,7 +1871,7 @@ export default function App() {
                         fontSize:14,fontWeight:800,cursor:"pointer",
                         fontFamily:"Century Gothic, Trebuchet MS, sans-serif",
                       }}>
-                        ⚡ Commander
+                        Commander
                       </button>
                     </div>
                   </div>
