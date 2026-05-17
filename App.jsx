@@ -579,7 +579,7 @@ function BannerSlider({ onCreditClick }) {
             <div style={{background:"rgba(255,165,0,0.25)",color:"#FFA500",fontSize:10,fontWeight:800,padding:"4px 12px",borderRadius:20,display:"inline-block",marginBottom:8,letterSpacing:1,border:"1px solid rgba(255,165,0,0.5)"}}>
               ACHAT À CRÉDIT
             </div>
-            <div style={{fontSize:15,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+            <div style={{fontSize:17,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
               Achetez maintenant,<br/>
               <span style={{color:"#FFB347"}}>payez en douceur ! 😊</span>
             </div>
@@ -614,9 +614,9 @@ function BannerSlider({ onCreditClick }) {
             <div style={{background:"rgba(255,165,0,0.25)",color:"#FFA500",fontSize:9,fontWeight:800,padding:"3px 10px",borderRadius:20,display:"inline-block",marginBottom:6,letterSpacing:1,border:"1px solid rgba(255,165,0,0.5)"}}>
               CRÉDIT INSTANTANÉ
             </div>
-            <div style={{fontSize:15,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
+            <div style={{fontSize:17,fontWeight:900,color:"#fff",lineHeight:1.25,marginBottom:6,fontFamily:"Century Gothic, Trebuchet MS, sans-serif"}}>
               Besoin d'argent ??<br/>
-              <span style={{color:"#FFA500",fontSize:16}}>LA MARAE GÈRE ÇA !!</span>
+              <span style={{color:"#FFA500",fontSize:17}}>LA MARAE GÈRE ÇA !!</span>
             </div>
             <div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:8,lineHeight:1.5}}>
               Recevez jusqu'à <b style={{color:"#FFA500",fontSize:13}}>150 000 FCFA</b> directement sur votre <b style={{color:"#fff"}}>compte mobile</b>
@@ -1739,7 +1739,93 @@ export default function App() {
             )}
           </>}
 
-          {/* ── Modal produit ── */}
+
+          {tab==="credit"&&<>
+            <div style={{padding:"20px 20px 0"}}>
+              <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:4}}>Mutuelle de Crédit</div>
+              <div style={{fontSize:12,color:C.sub,marginBottom:16}}>Gérez vos crédits et demandez un financement</div>
+            </div>
+            <div style={{margin:"0 20px 14px",background:`linear-gradient(135deg,${C.primaryDark},${C.primary} 60%,${C.accent} 160%)`,borderRadius:20,padding:20,color:C.white,position:"relative",overflow:"hidden"}}>
+              <div style={{position:"absolute",right:-30,top:-30,width:140,height:140,background:"rgba(255,255,255,0.05)",borderRadius:"50%"}}/>
+              <div style={{fontSize:11,opacity:0.8,marginBottom:4,letterSpacing:1}}>SOLDE DISPONIBLE</div>
+              <div style={{fontSize:32,fontWeight:800,marginBottom:2}}>75 000 <span style={{fontSize:16,fontWeight:400}}>FCFA</span></div>
+              <div style={{fontSize:11,opacity:0.7,marginBottom:16}}>Membre actif depuis Jan. 2024</div>
+              <div style={{display:"flex",gap:8}}>
+                {[{l:"Épargne",v:"42 500"},{l:"Crédit",v:"30 000"},{l:"Remboursé",v:"85%"}].map((s,i)=>(
+                  <div key={i} style={{flex:1,background:"rgba(255,255,255,0.14)",borderRadius:12,padding:"9px 10px"}}>
+                    <div style={{fontSize:9,opacity:0.8,marginBottom:2}}>{s.l}</div>
+                    <div style={{fontSize:14,fontWeight:700}}>{s.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{padding:"0 20px 12px"}}>
+              <div style={{background:C.card,borderRadius:16,padding:16,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+                  <span style={{fontSize:13,fontWeight:700,color:C.text}}>Remboursement en cours</span>
+                  <span style={{fontSize:12,fontWeight:800,color:C.primary}}>85%</span>
+                </div>
+                <div style={{height:6,background:C.light,borderRadius:3,overflow:"hidden"}}>
+                  <div style={{height:"100%",width:"85%",background:`linear-gradient(90deg,${C.primary},${C.accent})`,borderRadius:3}}/>
+                </div>
+                <div style={{fontSize:11,color:C.sub,marginTop:6}}>Prochain versement : 5 000 FCFA le 15 juin</div>
+              </div>
+            </div>
+            <div style={{padding:"0 20px"}}>
+              <div style={{fontSize:15,fontWeight:700,color:C.text,marginBottom:12}}>Types de crédit disponibles</div>
+              {LOANS.map((l,i)=>(
+                <div key={i} style={{background:C.card,borderRadius:16,padding:"14px 16px",marginBottom:10,boxShadow:"0 2px 8px rgba(26,58,143,0.06)",display:"flex",alignItems:"center",gap:12}}>
+                  <div style={{width:44,height:44,borderRadius:12,background:l.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{l.icon}</div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:C.text,marginBottom:2}}>{l.name}</div>
+                    <div style={{fontSize:11,color:C.sub}}>{l.desc}</div>
+                    <div style={{fontSize:13,fontWeight:800,color:C.accent}}>{l.rate}</div>
+                  </div>
+                  <button style={{background:C.primary,color:C.white,border:"none",borderRadius:10,padding:"8px 12px",fontSize:11,fontWeight:700,cursor:"pointer"}} onClick={()=>setShowLoan(l)}>Demander</button>
+                </div>
+              ))}
+            </div>
+          </>}
+
+          {tab==="orders"&&(
+            <div style={{padding:"20px 20px 0"}}>
+              <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:16,paddingTop:8}}>Mes Commandes</div>
+              {[{id:"#MC-2401",items:"Huile palme + Savon",date:"08 mai 2025",status:"Livré",bg:C.light,tc:C.primary},{id:"#MC-2398",items:"Riz local 25kg",date:"02 mai 2025",status:"En cours",bg:"#FFF8E1",tc:"#F59E0B"},{id:"#MC-2389",items:"Tissu Wax 6m",date:"24 avr. 2025",status:"Annulé",bg:"#FEE2E2",tc:C.accent}].map((o,i)=>(
+                <div key={i} style={{background:C.card,borderRadius:16,padding:16,marginBottom:10,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+                    <span style={{fontSize:13,fontWeight:800,color:C.text}}>{o.id}</span>
+                    <span style={{fontSize:11,fontWeight:700,color:o.tc,background:o.bg,padding:"3px 10px",borderRadius:20}}>{o.status}</span>
+                  </div>
+                  <div style={{fontSize:12,color:C.sub,marginBottom:2}}>{o.items}</div>
+                  <div style={{fontSize:11,color:"#AAA"}}>{o.date}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab==="profile"&&(
+            <div style={{padding:"20px 20px 0"}}>
+              <div style={{display:"flex",alignItems:"center",gap:14,background:C.card,borderRadius:16,padding:16,marginBottom:14,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
+                <div style={{width:56,height:56,borderRadius:18,background:`linear-gradient(135deg,${C.primary},${C.accent})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:C.white,fontWeight:700}}>KD</div>
+                <div>
+                  <div style={{fontSize:16,fontWeight:800,color:C.text,marginBottom:2}}>{currentUser?.name || "Utilisateur"}</div>
+                  <div style={{fontSize:12,color:C.sub}}>{currentUser?.id || "MAR-XXXX"}</div>
+                  <div style={{background:C.accent,color:C.white,fontSize:10,fontWeight:800,padding:"2px 8px",borderRadius:20,marginTop:4,display:"inline-block"}}>⭐ Membre Premium</div>
+                </div>
+              </div>
+              {[{icon:"👤",label:"Mon profil"},{icon:"📦",label:"Mes commandes"},{icon:"💳",label:"Mes crédits"},{icon:"📍",label:"Mes adresses"},{icon:"🔔",label:"Notifications"},{icon:"🔒",label:"Sécurité"},{icon:"❓",label:"Aide & Support"},{icon:"🚪",label:"Déconnexion"}].map((m,i)=>(
+                <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"13px 16px",background:C.card,borderRadius:14,marginBottom:8,cursor:"pointer",boxShadow:"0 1px 4px rgba(26,58,143,0.05)"}}>
+                  <div style={{width:38,height:38,borderRadius:10,background:C.light,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>{m.icon}</div>
+                  <span style={{flex:1,fontSize:13,fontWeight:600,color:C.text}}>{m.label}</span>
+                  <span style={{color:C.sub,fontSize:16}}>›</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+
+        {/* ── Modal produit ── */}
           {selectedProduct && (()=>{
             const p = selectedProduct;
             const resolveImg2 = (key) => {
@@ -1758,7 +1844,7 @@ export default function App() {
             const discount = p.old ? Math.round((1 - parseInt(p.price.replace(/\s/g,"")) / parseInt(p.old.replace(/\s/g,""))) * 100) : null;
             const totalPrice = (parseInt(p.price.replace(/\s/g,"")) * modalQty).toLocaleString("fr-FR");
             return (
-              <div style={{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
+              <div style={{position:"absolute",inset:0,zIndex:9999,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
                 onClick={(e)=>{ if(e.target===e.currentTarget) setSelectedProduct(null); }}>
                 {/* Overlay */}
                 <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.55)",backdropFilter:"blur(3px)"}}
@@ -1879,90 +1965,6 @@ export default function App() {
               </div>
             );
           })()}
-
-          {tab==="credit"&&<>
-            <div style={{padding:"20px 20px 0"}}>
-              <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:4}}>Mutuelle de Crédit</div>
-              <div style={{fontSize:12,color:C.sub,marginBottom:16}}>Gérez vos crédits et demandez un financement</div>
-            </div>
-            <div style={{margin:"0 20px 14px",background:`linear-gradient(135deg,${C.primaryDark},${C.primary} 60%,${C.accent} 160%)`,borderRadius:20,padding:20,color:C.white,position:"relative",overflow:"hidden"}}>
-              <div style={{position:"absolute",right:-30,top:-30,width:140,height:140,background:"rgba(255,255,255,0.05)",borderRadius:"50%"}}/>
-              <div style={{fontSize:11,opacity:0.8,marginBottom:4,letterSpacing:1}}>SOLDE DISPONIBLE</div>
-              <div style={{fontSize:32,fontWeight:800,marginBottom:2}}>75 000 <span style={{fontSize:16,fontWeight:400}}>FCFA</span></div>
-              <div style={{fontSize:11,opacity:0.7,marginBottom:16}}>Membre actif depuis Jan. 2024</div>
-              <div style={{display:"flex",gap:8}}>
-                {[{l:"Épargne",v:"42 500"},{l:"Crédit",v:"30 000"},{l:"Remboursé",v:"85%"}].map((s,i)=>(
-                  <div key={i} style={{flex:1,background:"rgba(255,255,255,0.14)",borderRadius:12,padding:"9px 10px"}}>
-                    <div style={{fontSize:9,opacity:0.8,marginBottom:2}}>{s.l}</div>
-                    <div style={{fontSize:14,fontWeight:700}}>{s.v}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{padding:"0 20px 12px"}}>
-              <div style={{background:C.card,borderRadius:16,padding:16,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-                  <span style={{fontSize:13,fontWeight:700,color:C.text}}>Remboursement en cours</span>
-                  <span style={{fontSize:12,fontWeight:800,color:C.primary}}>85%</span>
-                </div>
-                <div style={{height:6,background:C.light,borderRadius:3,overflow:"hidden"}}>
-                  <div style={{height:"100%",width:"85%",background:`linear-gradient(90deg,${C.primary},${C.accent})`,borderRadius:3}}/>
-                </div>
-                <div style={{fontSize:11,color:C.sub,marginTop:6}}>Prochain versement : 5 000 FCFA le 15 juin</div>
-              </div>
-            </div>
-            <div style={{padding:"0 20px"}}>
-              <div style={{fontSize:15,fontWeight:700,color:C.text,marginBottom:12}}>Types de crédit disponibles</div>
-              {LOANS.map((l,i)=>(
-                <div key={i} style={{background:C.card,borderRadius:16,padding:"14px 16px",marginBottom:10,boxShadow:"0 2px 8px rgba(26,58,143,0.06)",display:"flex",alignItems:"center",gap:12}}>
-                  <div style={{width:44,height:44,borderRadius:12,background:l.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{l.icon}</div>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:13,fontWeight:700,color:C.text,marginBottom:2}}>{l.name}</div>
-                    <div style={{fontSize:11,color:C.sub}}>{l.desc}</div>
-                    <div style={{fontSize:13,fontWeight:800,color:C.accent}}>{l.rate}</div>
-                  </div>
-                  <button style={{background:C.primary,color:C.white,border:"none",borderRadius:10,padding:"8px 12px",fontSize:11,fontWeight:700,cursor:"pointer"}} onClick={()=>setShowLoan(l)}>Demander</button>
-                </div>
-              ))}
-            </div>
-          </>}
-
-          {tab==="orders"&&(
-            <div style={{padding:"20px 20px 0"}}>
-              <div style={{fontSize:18,fontWeight:800,color:C.text,marginBottom:16,paddingTop:8}}>Mes Commandes</div>
-              {[{id:"#MC-2401",items:"Huile palme + Savon",date:"08 mai 2025",status:"Livré",bg:C.light,tc:C.primary},{id:"#MC-2398",items:"Riz local 25kg",date:"02 mai 2025",status:"En cours",bg:"#FFF8E1",tc:"#F59E0B"},{id:"#MC-2389",items:"Tissu Wax 6m",date:"24 avr. 2025",status:"Annulé",bg:"#FEE2E2",tc:C.accent}].map((o,i)=>(
-                <div key={i} style={{background:C.card,borderRadius:16,padding:16,marginBottom:10,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
-                    <span style={{fontSize:13,fontWeight:800,color:C.text}}>{o.id}</span>
-                    <span style={{fontSize:11,fontWeight:700,color:o.tc,background:o.bg,padding:"3px 10px",borderRadius:20}}>{o.status}</span>
-                  </div>
-                  <div style={{fontSize:12,color:C.sub,marginBottom:2}}>{o.items}</div>
-                  <div style={{fontSize:11,color:"#AAA"}}>{o.date}</div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {tab==="profile"&&(
-            <div style={{padding:"20px 20px 0"}}>
-              <div style={{display:"flex",alignItems:"center",gap:14,background:C.card,borderRadius:16,padding:16,marginBottom:14,boxShadow:"0 2px 8px rgba(26,58,143,0.06)"}}>
-                <div style={{width:56,height:56,borderRadius:18,background:`linear-gradient(135deg,${C.primary},${C.accent})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,color:C.white,fontWeight:700}}>KD</div>
-                <div>
-                  <div style={{fontSize:16,fontWeight:800,color:C.text,marginBottom:2}}>{currentUser?.name || "Utilisateur"}</div>
-                  <div style={{fontSize:12,color:C.sub}}>{currentUser?.id || "MAR-XXXX"}</div>
-                  <div style={{background:C.accent,color:C.white,fontSize:10,fontWeight:800,padding:"2px 8px",borderRadius:20,marginTop:4,display:"inline-block"}}>⭐ Membre Premium</div>
-                </div>
-              </div>
-              {[{icon:"👤",label:"Mon profil"},{icon:"📦",label:"Mes commandes"},{icon:"💳",label:"Mes crédits"},{icon:"📍",label:"Mes adresses"},{icon:"🔔",label:"Notifications"},{icon:"🔒",label:"Sécurité"},{icon:"❓",label:"Aide & Support"},{icon:"🚪",label:"Déconnexion"}].map((m,i)=>(
-                <div key={i} style={{display:"flex",alignItems:"center",gap:14,padding:"13px 16px",background:C.card,borderRadius:14,marginBottom:8,cursor:"pointer",boxShadow:"0 1px 4px rgba(26,58,143,0.05)"}}>
-                  <div style={{width:38,height:38,borderRadius:10,background:C.light,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>{m.icon}</div>
-                  <span style={{flex:1,fontSize:13,fontWeight:600,color:C.text}}>{m.label}</span>
-                  <span style={{color:C.sub,fontSize:16}}>›</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
 
         {/* Tab Bar */}
         <div style={{position:"absolute",bottom:0,left:0,right:0,background:C.white,borderTop:`1px solid ${C.light}`,display:"flex",padding:"6px 0 16px",boxShadow:"0 -4px 20px rgba(26,58,143,0.08)"}}>
